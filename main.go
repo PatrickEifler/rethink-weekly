@@ -1,9 +1,10 @@
 package main
 
 import (
-	"net/http"
-
+	"fmt"
+	"github.com/gorilla/mux"
 	"github.com/unrolled/render" // or "gopkg.in/unrolled/render.v1"
+	"net/http"
 	//"github.com/rs/cors"
 	//"github.com/thoas/stats"
 )
@@ -22,16 +23,43 @@ func template() *render.Render {
 	return r
 }
 
-func run(mux *http.ServeMux) {
+func run(mux *mux.Router) {
 	http.ListenAndServe("0.0.0.0:3000", mux)
 }
 
+type handlerAction func(rw http.ResponseWriter, r *http.Request)
+
 func main() {
-	mux := http.NewServeMux()
-	r := template()
-	app := App{
-		r,
+	r := mux.NewRouter().StrictSlash(false)
+
+	r.HandleFunc("/", HomeHandler())
+	r.HandleFunc("/issues/{id:[0-9]+}", IssuesHandler())
+	run(r)
+}
+
+func HomeHandler() handlerAction {
+	return func(rw http.ResponseWriter, r *http.Request) {
+		fmt.Fprintln(rw, "Home")
 	}
-	setupRoute(mux, &app)
-	run(mux)
+}
+
+func IssuesHandler() handlerAction {
+	return func(rw http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		fmt.Fprintln(rw, vars["id"])
+	}
+}
+
+func SubscribeHandler() handlerAction {
+	return func(rw http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		fmt.Fprintln(rw, vars["id"])
+	}
+}
+
+func UnsubscribeHandler() handlerAction {
+	return func(rw http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		fmt.Fprintln(rw, vars["id"])
+	}
 }
