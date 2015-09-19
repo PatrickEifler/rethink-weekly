@@ -21,12 +21,14 @@
   "homepage": "https://github.com/axcoto/rethink-weekly",
   "devDependencies": {
     "babel": "^5.8.23",
+    "elemental": "^0.4.8",
     "gulp": "^3.9.0",
     "gulp-babel": "^5.2.1",
     "gulp-concat": "^2.6.0",
     "gulp-html-replace": "^1.5.1",
     "gulp-react": "^3.0.1",
-    "gulp-uglify": "^1.4.1"
+    "gulp-uglify": "^1.4.1",
+    "react": "^0.13.3"
   },
   "dependencies": {
     "babel": "^5.8.23"
