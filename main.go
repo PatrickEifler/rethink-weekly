@@ -32,8 +32,9 @@ type handlerAction func(rw http.ResponseWriter, r *http.Request)
 func main() {
 	r := mux.NewRouter().StrictSlash(false)
 
-	r.HandleFunc("/", HomeHandler())
-	r.HandleFunc("/issues/{id:[0-9]+}", IssuesHandler())
+	//r.HandleFunc("/", HomeHandler())
+	r.HandleFunc("/api/issues/{id:[0-9]+}", IssuesHandler())
+	r.PathPrefix("/").Handler(http.FileServer(http.Dir("./client/dist/")))
 	run(r)
 }
 
