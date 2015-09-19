@@ -10,8 +10,9 @@ var path = {
   JS: ['src/js/*.js', 'src/js/**/*.js'],
   MINIFIED_OUT: 'build.min.js',
   DEST_SRC: 'dist/src',
-  DEST_BUILD: '../public/dist/build',
-  DEST: 'dist'
+  DEST: 'dist/build',
+  // Production target
+  DEST_BUILD: 'dist',
 }
 
 gulp.task('transform', function(){
@@ -25,4 +26,26 @@ gulp.task('copy', function(){
     .pipe(gulp.dest(path.DEST))
 })
 
+gulp.task('watch', function(){
+    gulp.watch(path.ALL, ['transform', 'copy']);
+})
 
+gulp.task('default', ['watch'])
+
+gulp.task('build', function(){
+  gulp.src(path.JS)
+    .pipe(react())
+    .pipe(concat(path.MINIFIED_OUT))
+    .pipe(uglify(path.MINIFIED_OUT))
+    .pipe(gulp.dest(path.DEST_BUILD));
+})
+
+gulp.task('productify', function() {
+  gulp.src(path.HTML)
+    .pipe(htmlreplace({
+      js: 'build/' + path.MINIFIED_OUT
+    }))
+    .pipe(gulp.dest(path.DEST))
+})
+
+gulp.task('production', ['productify', 'build'])
