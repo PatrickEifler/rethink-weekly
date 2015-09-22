@@ -1,54 +1,46 @@
-var gulp = require('gulp')
-var concat = require('gulp-concat')
-var uglify = require('gulp-uglify')
-var react = require('gulp-react')
-var htmlreplace = require('gulp-html-replace')
+var gulp = require('gulp');
+var uglify = require('gulp-uglify');
+var htmlreplace = require('gulp-html-replace');
+var source = require('vinyl-source-stream');
+var browserify = require('browserify');
+var watchify = require('watchify');
+var reactify = require('reactify');
+var streamify = require('gulp-streamify');
+
 var babel = require('gulp-babel')
 
 var path = {
   HTML: 'src/index.html',
-  ALL: ['src/js/*.js', 'src/js/**/*.js', 'src/index.html'],
-  JS: ['src/js/*.js', 'src/js/**/*.js'],
   MINIFIED_OUT: 'build.min.js',
+  OUT: 'build.js',
+  DEST: 'dist',
+  DEST_BUILD: 'dist/build',
   DEST_SRC: 'dist/src',
-  DEST: 'dist/build',
-  // Production target
-  DEST_BUILD: 'dist',
-}
-
-gulp.task('transform', function(){
-  gulp.src(path.JS)
-    .pipe(babel())
-    .pipe(react())
-    .pipe(gulp.dest(path.DEST_SRC))
-})
+  ENTRY_POINT: './src/js/App.js'
+};
 
 gulp.task('copy', function(){
   gulp.src(path.HTML)
-    .pipe(gulp.dest(path.DEST_BUILD))
-})
+  .pipe(gulp.dest(path.DEST));
+});
 
-gulp.task('watch', function(){
-    gulp.watch(path.ALL, ['transform', 'copy']);
-})
+gulp.task('watch', function() {
+  gulp.watch(path.HTML, ['copy']);
 
-gulp.task('default', ['watch'])
+  var watcher  = watchify(browserify({
+    entries: [path.ENTRY_POINT],
+    transform: [reactify],
+    debug: true,
+    cache: {}, packageCache: {}, fullPaths: true
+  }));
 
-gulp.task('build', function(){
-  gulp.src(path.JS)
-    .pipe(babel())
-    .pipe(react())
-    .pipe(concat(path.MINIFIED_OUT))
-    .pipe(uglify(path.MINIFIED_OUT))
-    .pipe(gulp.dest(path.DEST_BUILD));
-})
-
-gulp.task('productify', function() {
-  gulp.src(path.HTML)
-    .pipe(htmlreplace({
-      js: 'build/' + path.MINIFIED_OUT
-    }))
-    .pipe(gulp.dest(path.DEST))
-})
-
-gulp.task('production', ['productify', 'build'])
+  return watcher.on('update', function () {
+    watcher.bundle()
+    .pipe(source(path.OUT))
+    .pipe(gulp.dest(path.DEST_SRC))
+    console.log('Updated');
+  })
+  .bundle()
+  .pipe(source(path.OUT))
+  .pipe(gulp.dest(path.DEST_SRC));
+});
