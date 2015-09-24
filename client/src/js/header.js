@@ -1,3 +1,5 @@
+var Stats = require("./stats")
+
 var Header = React.createClass({
   render: function(){
     return (
@@ -8,4 +10,6 @@ var Header = React.createClass({
       </header>
     )
   }
-});
+})
+
+module.exports = Header

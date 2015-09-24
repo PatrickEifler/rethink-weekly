@@ -7,7 +7,12 @@ var watchify = require('watchify');
 var reactify = require('reactify');
 var streamify = require('gulp-streamify');
 
-var babel = require('gulp-babel')
+
+// REF https://gist.github.com/danharper/3ca2273125f500429945
+var sourcemaps = require('gulp-sourcemaps')
+var buffer = require('vinyl-buffer')
+
+var babel = require('babelify')
 
 var path = {
   HTML: 'src/index.html',
@@ -16,12 +21,13 @@ var path = {
   DEST: 'dist',
   DEST_BUILD: 'dist/build',
   DEST_SRC: 'dist/src',
-  ENTRY_POINT: './src/js/App.js'
+  ENTRY_POINT: './src/js/app.js'
 };
 
 gulp.task('copy', function(){
-  gulp.src(path.HTML)
-  .pipe(gulp.dest(path.DEST));
+  gulp
+    .src(path.HTML)
+    .pipe(gulp.dest(path.DEST));
 });
 
 gulp.task('watch', function() {
@@ -32,15 +38,44 @@ gulp.task('watch', function() {
     transform: [reactify],
     debug: true,
     cache: {}, packageCache: {}, fullPaths: true
-  }));
+  })).transform(babel)
 
   return watcher.on('update', function () {
     watcher.bundle()
-    .pipe(source(path.OUT))
-    .pipe(gulp.dest(path.DEST_SRC))
-    console.log('Updated');
+      .pipe(source(path.OUT))
+      
+      .pipe(buffer())
+      .pipe(sourcemaps.init({ loadMaps: true }))
+       .pipe(sourcemaps.write('./'))
+
+      .pipe(gulp.dest(path.DEST_SRC))
+    console.log('Updated')
   })
   .bundle()
   .pipe(source(path.OUT))
-  .pipe(gulp.dest(path.DEST_SRC));
-});
+  .pipe(gulp.dest(path.DEST_SRC))
+})
+
+gulp.task('default', ['watch']);
+
+gulp.task('build', function(){
+  browserify({
+    entries: [path.ENTRY_POINT],
+    transform: [reactify]
+  })
+    .bundle()
+    .pipe(source(path.MINIFIED_OUT))
+    //.pipe(streamify(uglify({file: path.MINIFIED_OUT})))
+    .pipe(gulp.dest(path.MINIFIED_OUT))
+    .pipe(gulp.dest(path.DEST_BUILD))
+})
+
+gulp.task('correctAssetUrl', function(){
+  gulp.src(path.HTML)
+    .pipe(htmlreplace({
+      'js': 'build/' + path.MINIFIED_OUT
+    }))
+    .pipe(gulp.dest(path.DEST));
+})
+
+gulp.task('production', ['correctAssetUrl', 'build'])

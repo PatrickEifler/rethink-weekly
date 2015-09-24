@@ -6,4 +6,6 @@ var Stats = React.createClass({
       </div>
     )
   }
-});
+})
+
+module.exports = Stats
