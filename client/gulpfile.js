@@ -43,10 +43,10 @@ gulp.task('watch', function() {
   return watcher.on('update', function () {
     watcher.bundle()
       .pipe(source(path.OUT))
-      
+
       .pipe(buffer())
       .pipe(sourcemaps.init({ loadMaps: true }))
-       .pipe(sourcemaps.write('./'))
+      .pipe(sourcemaps.write('./'))
 
       .pipe(gulp.dest(path.DEST_SRC))
     console.log('Updated')

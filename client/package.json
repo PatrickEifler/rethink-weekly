@@ -21,6 +21,7 @@
   "homepage": "https://github.com/axcoto/rethink-weekly",
   "devDependencies": {
     "babel": "^5.8.23",
+    "babel-core": "^5.8.25",
     "babelify": "^6.3.0",
     "browserify": "^11.1.0",
     "elemental": "^0.4.8",
