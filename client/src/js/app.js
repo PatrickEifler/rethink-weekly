@@ -1,18 +1,20 @@
-(function() {
-  let injectTapEventPlugin = require('react-tap-event-plugin')
+import Footer from './footer'
+import Header from './header'
 
-  let Header = require('./header')
-  let Footer = require('./footer')
+(function() {
+  //let injectTapEventPlugin = require('react-tap-event-plugin')
 
   let App = React.createClass({
     render: function(){
       return (
-        <Header/>
-        <Footer/>
+        <div>
+          <Header />
+          <Footer />
+        </div>
       )
     }
   })
-  
-  console.log("sa   sas ")
+
+  console.log("Woohoo...loaded")
   React.render(<App />, document.getElementById('app'))
 })()

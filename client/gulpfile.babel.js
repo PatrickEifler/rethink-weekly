@@ -1,20 +1,18 @@
-var gulp = require('gulp')
-var uglify = require('gulp-uglify')
-var htmlreplace = require('gulp-html-replace');
-var source = require('vinyl-source-stream');
-var browserify = require('browserify');
-var watchify = require('watchify');
-var reactify = require('reactify');
-var streamify = require('gulp-streamify');
-
+import gulp from 'gulp'
+import uglify from 'gulp-uglify'
+import htmlreplace from 'gulp-html-replace'
+import source from 'vinyl-source-stream'
+import browserify from 'browserify'
+import watchify from 'watchify'
+import reactify from 'reactify'
+import streamify from 'gulp-streamify'
 
 // REF https://gist.github.com/danharper/3ca2273125f500429945
-var sourcemaps = require('gulp-sourcemaps')
-var buffer = require('vinyl-buffer')
+import sourcemaps from 'gulp-sourcemaps'
+import buffer from 'vinyl-buffer'
+import babel from 'babelify'
 
-var babel = require('babelify')
-
-var path = {
+const path = {
   HTML: 'src/index.html',
   MINIFIED_OUT: 'build.min.js',
   OUT: 'build.js',
@@ -24,7 +22,7 @@ var path = {
   ENTRY_POINT: './src/js/app.js'
 };
 
-var copy = function(){
+const copy = function(){
   gulp
     .src(path.HTML)
     .pipe(gulp.dest(path.DEST));
@@ -34,7 +32,7 @@ gulp.task('copy', copy)
 gulp.task('watch', function() {
   gulp.watch(path.HTML, ['copy'])
 
-  var bundler = watchify(browserify(path.ENTRY_POINT, { debug: true }).transform(babel))
+  let bundler = watchify(browserify(path.ENTRY_POINT, { debug: true }).transform(babel))
 
   function rebundle() {
     bundler.bundle()
