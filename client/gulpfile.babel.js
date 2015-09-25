@@ -1,5 +1,5 @@
-var gulp = require('gulp');
-var uglify = require('gulp-uglify');
+var gulp = require('gulp')
+var uglify = require('gulp-uglify')
 var htmlreplace = require('gulp-html-replace');
 var source = require('vinyl-source-stream');
 var browserify = require('browserify');
@@ -24,36 +24,35 @@ var path = {
   ENTRY_POINT: './src/js/app.js'
 };
 
-gulp.task('copy', function(){
+var copy = function(){
   gulp
     .src(path.HTML)
     .pipe(gulp.dest(path.DEST));
-});
+}
+gulp.task('copy', copy)
 
 gulp.task('watch', function() {
-  gulp.watch(path.HTML, ['copy']);
+  gulp.watch(path.HTML, ['copy'])
 
-  var watcher  = watchify(browserify({
-    entries: [path.ENTRY_POINT],
-    transform: [reactify],
-    debug: true,
-    cache: {}, packageCache: {}, fullPaths: true
-  })).transform(babel)
+  var bundler = watchify(browserify(path.ENTRY_POINT, { debug: true }).transform(babel))
 
-  return watcher.on('update', function () {
-    watcher.bundle()
+  function rebundle() {
+    bundler.bundle()
+      .on('error', function(err) { console.error(err); this.emit('end'); })
       .pipe(source(path.OUT))
-
       .pipe(buffer())
       .pipe(sourcemaps.init({ loadMaps: true }))
       .pipe(sourcemaps.write('./'))
+      .pipe(gulp.dest(path.DEST_SRC));
+  }
 
-      .pipe(gulp.dest(path.DEST_SRC))
-    console.log('Updated')
+  bundler.on('update', function() {
+    console.log('-> bundling...')
+    rebundle()
   })
-  .bundle()
-  .pipe(source(path.OUT))
-  .pipe(gulp.dest(path.DEST_SRC))
+
+  copy()
+  rebundle()
 })
 
 gulp.task('default', ['watch']);
