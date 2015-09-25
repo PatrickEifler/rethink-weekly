@@ -32,7 +32,7 @@ gulp.task('copy', copy)
 gulp.task('watch', function() {
   gulp.watch(path.HTML, ['copy'])
 
-  let bundler = watchify(browserify(path.ENTRY_POINT, { debug: true }).transform(babel))
+  const bundler = watchify(browserify(path.ENTRY_POINT, { debug: true }).transform(babel))
 
   function rebundle() {
     bundler.bundle()
@@ -58,7 +58,7 @@ gulp.task('default', ['watch']);
 gulp.task('build', function(){
   browserify({
     entries: [path.ENTRY_POINT],
-    transform: [reactify]
+    transform: [babel]
   })
     .bundle()
     .pipe(source(path.MINIFIED_OUT))
@@ -70,7 +70,7 @@ gulp.task('build', function(){
 gulp.task('correctAssetUrl', function(){
   gulp.src(path.HTML)
     .pipe(htmlreplace({
-      'js': 'build/' + path.MINIFIED_OUT
+      'js': `build/${path.MINIFIED_OUT}`
     }))
     .pipe(gulp.dest(path.DEST));
 })
