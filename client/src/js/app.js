@@ -4,8 +4,8 @@ import Header from './header'
 (function() {
   //let injectTapEventPlugin = require('react-tap-event-plugin')
 
-  let App = React.createClass({
-    render: function(){
+  class App extends React.Component {
+    render() {
       return (
         <div>
           <Header />
@@ -13,7 +13,7 @@ import Header from './header'
         </div>
       )
     }
-  })
+  }
 
   console.log("Woohoo...loaded")
   React.render(<App />, document.getElementById('app'))
