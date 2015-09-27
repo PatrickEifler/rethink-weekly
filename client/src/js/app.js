@@ -1,5 +1,7 @@
 import Footer from './footer'
 import Header from './header'
+import SubscribeForm from './form/subscribe'
+
 import React  from 'react'
 import { Router, Route, Link } from 'react-router'
 
@@ -21,7 +23,8 @@ import {
   PasswordInputGroup,
   Radio,
   RadioGroup,
-  Table
+  Table,
+  Row
 } from 'elemental'
 
 (function() {
@@ -31,8 +34,9 @@ import {
       return (
         <div>
           <Header />
-          <Button size="lg">Large Button</Button>
-
+          <Row>
+            <SubscribeForm />
+          </Row>
           <Footer />
         </div>
       )
