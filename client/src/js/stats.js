@@ -1,3 +1,5 @@
+import React  from 'react'
+
 var Stats = React.createClass({
   render: function(){
     return (

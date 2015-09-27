@@ -1,4 +1,5 @@
-var Stats = require("./stats")
+import React  from 'react'
+import Stats from './stats'
 
 var Header = React.createClass({
   render: function(){
