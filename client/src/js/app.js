@@ -1,6 +1,7 @@
 import Footer from './footer'
 import Header from './header'
 import SubscribeForm from './form/subscribe'
+import IssueList from './issuelist'
 
 import React  from 'react'
 import { Router, Route, Link } from 'react-router'
@@ -36,6 +37,7 @@ import {
           <Header />
           <Row>
             <SubscribeForm />
+            <IssueList />
           </Row>
           <Footer />
         </div>
@@ -43,7 +45,7 @@ import {
     }
   })
 
-  console.log("Woohoo...loaded")
+  console.log("Thanks for interesting. Help me by buying my book Simply RethinkDB")
 
   // Declarative route configuration (could also load this config lazily
   // instead, all you really need is a single root route, you don't need to
@@ -60,5 +62,4 @@ import {
 //    </Router>
 //  ), document.getElementById('app'))
   React.render(<App />, document.getElementById('app'))
-
 })()
