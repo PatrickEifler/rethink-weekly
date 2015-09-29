@@ -2,9 +2,11 @@ import Footer from './footer'
 import Header from './header'
 import SubscribeForm from './form/subscribe'
 import IssueList from './issuelist'
+import IssueDetail from './issuedetail'
+import About from './about'
 
 import React  from 'react'
-import { Router, Route, Link } from 'react-router'
+import { Router, Route, Link, IndexRoute } from 'react-router'
 
 import {
   Button,
@@ -37,7 +39,7 @@ import {
           <Header />
           <Row>
             <SubscribeForm />
-            <IssueList />
+            {this.props.children}
           </Row>
           <Footer />
         </div>
@@ -61,5 +63,14 @@ import {
 //      </Route>
 //    </Router>
 //  ), document.getElementById('app'))
-  React.render(<App />, document.getElementById('app'))
+  React.render((
+    <Router>
+      <Route path="/" component={App}>
+        <IndexRoute component={IssueList}/>
+        <Route path="issues" component={IssueList} />
+        <Route path="issues/:id" component={IssueDetail} />
+        <Route path="about" component={About} />
+      </Route>
+    </Router>
+  ), document.getElementById('app'))
 })()

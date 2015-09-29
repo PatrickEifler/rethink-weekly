@@ -17,8 +17,8 @@ export default React.createClass({
   render: function(){
     return (
       <div>
-      <Alert type="{this.props.type}"><strong>Warning:</strong> {this.props.message}</Alert>
-      <Spinner size="{this.props.size}" />
+        <Alert type="{this.props.type}"><strong>Warning:</strong> {this.props.message}</Alert>
+        <Spinner size="{this.props.size}" />
       </div>
     )
   }

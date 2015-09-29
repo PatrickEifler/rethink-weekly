@@ -1,26 +1,38 @@
 import React  from 'react'
+import { Router, Route, Link } from 'react-router'
 
 import {
   Row,
   Col
 } from 'elemental'
 
+import Storage from './service/storage'
+
+const storage = new Storage()
+
 export default React.createClass({
   getInitialState: function() {
-    return {issues: [
-      {name: "Issue #1", date: "Septembar 27"},
-      {name: "Issue #2", date: "Septembar 29"}
-    ]}
+    return {issues: []}
+  },
+
+  componentWillMount: function() {
+    storage.getIssues()
+      .then((issues) => { this.setState({issues: issues})})
   },
 
   render: function(){
     return (
       <div>
-      <h3>CHECK OUT WHAT THE REACT DIGEST SENT OUT BEFORE</h3>
+      <h3>CHECK OUT WHAT WE SENT OUT BEFORE</h3>
       {this.state.issues.map(issue => (
-        <Row>
-          <Col sm="1/2">{issue.name}</Col>
-          <Col sm="1/2">{issue.date}</Col>
+        // We need the key attr for react https://fb.me/react-warning-keys
+        <Row key={issue.id}>
+          <Col sm="1/2">
+            <Link to={"/issues/" + issue.id}>{issue.name}</Link>
+          </Col>
+          <Col sm="1/2">
+            <Link to={"/issues/" + issue.id}>{issue.date}</Link>
+          </Col>
         </Row>
       ))}
       </div>

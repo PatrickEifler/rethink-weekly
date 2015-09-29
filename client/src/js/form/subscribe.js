@@ -23,9 +23,14 @@ import {
 } from 'elemental'
 
 import Spinner from '../spinner'
+import Storage from '../service/storage'
 
 const PHASE_SUBSCRIBING = "subscribing"
 const PHASE_INIT = "init"
+const PHASE_DONE = "done"
+const PHASE_ERROR = "error"
+
+const storage = new Storage()
 
 export default React.createClass({
   getInitialState: function() {
@@ -34,12 +39,32 @@ export default React.createClass({
 
   handleSubscribe: function() {
     this.setState({phase: PHASE_SUBSCRIBING})
+    storage.subscribe({email: "v@v.com"})
+      .then(result => {
+        console.log(result)
+        this.setState({phase: PHASE_DONE})
+      })
+      .error(err => {
+        this.setState({phase: PHASE_ERROR})
+      })
   },
 
   render: function(){
     if (this.state.phase == PHASE_SUBSCRIBING) {
       return (
         <Spinner type="warning" message="Loading..." />
+      )
+    }
+
+    if (this.state.phase == PHASE_DONE) {
+      return (
+        <Alert type="success">Cool, check your email to verify the subscription.</Alert>
+      )
+    }
+
+    if (this.state.phase == PHASE_ERROR) {
+      return (
+        <Alert type="success">Err, <a href="#">re-try</a> again.</Alert>
       )
     }
 
