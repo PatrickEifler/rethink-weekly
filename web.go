@@ -43,8 +43,6 @@ func template() *render.Render {
 	return r
 }
 
-type handlerAction func(rw http.ResponseWriter, req *http.Request)
-
 func run(mux *mux.Router) {
 
 	http.ListenAndServe("0.0.0.0:3000", mux)
@@ -77,13 +75,13 @@ func runServer() {
 	run(router)
 }
 
-func HomeHandler() handlerAction {
+func HomeHandler() http.HandlerFunc {
 	return func(rw http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(rw, "Home")
 	}
 }
 
-func IssuesHandler() handlerAction {
+func IssuesHandler() http.HandlerFunc {
 	return func(rw http.ResponseWriter, req *http.Request) {
 		res, err := r.Table("issues").Run(session)
 		if err != nil {
@@ -110,7 +108,7 @@ func IssuesHandler() handlerAction {
 	}
 }
 
-func IssuesShowHandler() handlerAction {
+func IssuesShowHandler() http.HandlerFunc {
 	return func(rw http.ResponseWriter, req *http.Request) {
 		vars := mux.Vars(req)
 		res, err := r.Table("issues").Get(vars["id"]).Run(session)
@@ -138,7 +136,7 @@ func IssuesShowHandler() handlerAction {
 	}
 }
 
-func SubscribeHandler() handlerAction {
+func SubscribeHandler() http.HandlerFunc {
 	return func(rw http.ResponseWriter, req *http.Request) {
 		b := make([]byte, 32) // Get 32 random bytes
 		_, err := rand.Read(b)
@@ -194,7 +192,7 @@ func SubscribeHandler() handlerAction {
 	}
 }
 
-func ConfirmSubscribeHandler() handlerAction {
+func ConfirmSubscribeHandler() http.HandlerFunc {
 	return func(rw http.ResponseWriter, req *http.Request) {
 		vars := mux.Vars(req)
 		token := vars["token"]
@@ -222,7 +220,7 @@ func ConfirmSubscribeHandler() handlerAction {
 	}
 }
 
-func UnSubscribeHandler() handlerAction {
+func UnSubscribeHandler() http.HandlerFunc {
 	return func(rw http.ResponseWriter, req *http.Request) {
 		vars := mux.Vars(req)
 		fmt.Fprintln(rw, vars["id"])
