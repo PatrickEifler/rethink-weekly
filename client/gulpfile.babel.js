@@ -38,7 +38,7 @@ gulp.task('copy', copy)
 gulp.task('watch', function() {
   gulp.watch(path.HTML, ['copy'])
 
-  const bundler = watchify(browserify(path.ENTRY_POINT, { debug: true }).transform(babel))
+  const bundler = watchify(browserify(path.ENTRY_POINT, { debug: true, transforms: ["reactify", {"es6": true}] }).transform(babel))
 
   function rebundle() {
     bundler.bundle()
@@ -53,6 +53,7 @@ gulp.task('watch', function() {
   bundler.on('update', function() {
     console.log('-> bundling...')
     rebundle()
+    console.log('[x] Done')
   })
 
   copy()
