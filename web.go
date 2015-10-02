@@ -44,8 +44,7 @@ func template() *render.Render {
 }
 
 func run(mux *mux.Router) {
-
-	http.ListenAndServe("0.0.0.0:3000", mux)
+	http.ListenAndServe("127.0.0.1:3000", mux)
 }
 
 func runServer() {
@@ -170,7 +169,13 @@ func SubscribeHandler() http.HandlerFunc {
 			subscriber = existedSubscriber
 		} else {
 			fmt.Fprintln(out, "subscribers: %v", subscriber)
-			res, err = r.Table("subscribers").Insert(subscriber).Run(session)
+			res, err = r.Table("subscribers").Insert(map[string]string{
+				"email":         subscriber.Email,
+				"firstname":     subscriber.FirstName,
+				"lastname":      subscriber.LastName,
+				"status":        subscriber.Status,
+				"confirm_token": subscriber.ConfirmToken,
+			}).Run(session)
 			if err != nil {
 				fmt.Fprintf(out, "Err: %v\n", err)
 				fmt.Fprintf(rw, `{"result":"ok"}`)
@@ -185,7 +190,7 @@ func SubscribeHandler() http.HandlerFunc {
 		}
 
 		//Notifi the subscribers
-		if subscriber.Status == "pending" {
+		if subscriber.Status == "pending" && subscriber.Email != "" {
 			yeller.NotifiySubscriber(&subscriber)
 		}
 		fmt.Fprintf(rw, `{"result":"ok"}`)
@@ -195,18 +200,32 @@ func SubscribeHandler() http.HandlerFunc {
 func ConfirmSubscribeHandler() http.HandlerFunc {
 	return func(rw http.ResponseWriter, req *http.Request) {
 		vars := mux.Vars(req)
-		token := vars["token"]
-		fmt.Println(out, "token= %s", token)
-		res, err := r.Table("subscribers").Filter(map[string]string{
+		var token string
+		token = string(vars["token"])
+
+		fmt.Fprintf(out, "\ntoken= %s\n", token)
+		res, err := r.DB("rewl").Table("subscribers").Filter(map[string]string{
 			"confirm_token": token,
+			"status":        "pending",
 		}).Run(session)
 		if err != nil {
 			fmt.Fprintf(out, "Err: %v", err)
 		}
+
+		if err := res.Err(); err != nil {
+			fmt.Println("Query error ", err)
+		}
+
 		var existedSubscriber Subscriber
-		res.One(&existedSubscriber)
+		err = res.One(&existedSubscriber)
+		if err != nil {
+			fmt.Print("Error scanning database result: %s", err)
+			fmt.Fprintf(rw, "%s", `{"result":"ok","message":"not found or approved"}`)
+			return
+		}
+
 		res.Close()
-		fmt.Println(existedSubscriber)
+		fmt.Println("Existed= %v", existedSubscriber)
 
 		if existedSubscriber.Id != "" {
 			r.Table("subscribers").Get(existedSubscriber.Id).Update(map[string]string{
@@ -215,6 +234,7 @@ func ConfirmSubscribeHandler() http.HandlerFunc {
 
 			yeller.ApproveSubscriber(&existedSubscriber)
 		} else {
+			fmt.Fprintf(rw, "%s", `{"result":"ok","message":"not found or approved"}`)
 			fmt.Fprintf(out, "INvalid subscriber token")
 		}
 	}

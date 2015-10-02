@@ -1,5 +1,13 @@
 import Promise from 'bluebird'
 
+function serialize(obj) {
+  var a = []
+  for (var p in obj) {
+    a.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+  }
+  return a.join("&")
+}
+
 export function Post(url, data) {
   let request = new XMLHttpRequest()
   return new Promise(function(resolve, reject) {
@@ -16,7 +24,9 @@ export function Post(url, data) {
     }
 
     request.open('POST', url, true)
-    request.send()
+    console.log(serialize(data))
+    console.log(data)
+    request.send(serialize(data))
   })
 }
 

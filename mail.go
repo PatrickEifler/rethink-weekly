@@ -41,6 +41,7 @@ func (*mailer) ApproveSubscriber(subscriber *Subscriber) (bool, error) {
 		fmt.Sprintf("Vinh <%s>", os.Getenv("MAIL_FROM")),                                 // From
 		"Thankyou for subscriptions on RethinkDB Goodies",                                // Subject
 		fmt.Sprintf("Cool %s, we will send you weekly email now.", subscriber.FirstName), // Plain-text body
+		fmt.Sprintf("%s <%s>", subscriber.FirstName, subscriber.Email),                   // From
 	)
 
 	_, _, err := mg.Send(m)

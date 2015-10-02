@@ -21,6 +21,7 @@
   "homepage": "https://github.com/axcoto/rethink-weekly",
   "devDependencies": {
     "babelify": "^6.3.0",
+    "bluebird": "^2.10.1",
     "browserify": "^11.1.0",
     "gulp": "^3.9.0",
     "gulp-babel": "^5.2.1",

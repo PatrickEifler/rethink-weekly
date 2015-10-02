@@ -33,13 +33,26 @@ const PHASE_ERROR = "error"
 const storage = new Storage()
 
 export default React.createClass({
+  mixins: [React.addons.LinkedStateMixin],
+
   getInitialState: function() {
-    return {phase: PHASE_INIT}
+    return {
+      phase: PHASE_INIT,
+      email: "",
+      firstname: "",
+      lastname: ""
+    }
   },
 
   handleSubscribe: function() {
     this.setState({phase: PHASE_SUBSCRIBING})
-    storage.subscribe({email: "v@v.com"})
+    console.log(this.state)
+
+    storage.subscribe({
+      email: this.state.email,
+      firstname: this.state.firstname,
+      lastname: this.state.lastname,
+    })
       .then(result => {
         console.log(result)
         this.setState({phase: PHASE_DONE})
@@ -73,13 +86,13 @@ export default React.createClass({
       <Form>
         <InputGroup>
           <InputGroup.Section grow>
-            <FormInput type="text" placeholder="Email address ..." />
+            <FormInput type="text" placeholder="Email address ..." valueLink={this.linkState('email')} />
           </InputGroup.Section>
         </InputGroup>
         <InputGroup>
           <InputGroup.Section grow>
-            <FormInput type="text" placeholder="First name...(Optional)" />
-            <FormInput type="text" placeholder="Last name...(Optinal)" />
+            <FormInput type="text" placeholder="First name...(Optional)" valueLink={this.linkState('firstname')} />
+            <FormInput type="text" placeholder="Last name...(Optinal)" valueLink={this.linkState('lastname')} />
           </InputGroup.Section>
         </InputGroup>
 
