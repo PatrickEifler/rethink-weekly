@@ -1,7 +1,7 @@
 watch:
 	watchman -- trigger . build '*.*' --  make build notify
 
-stop:
+unwatch:
 	watchman watch-del .
 
 build:
