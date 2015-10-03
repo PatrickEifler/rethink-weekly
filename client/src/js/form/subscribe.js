@@ -71,13 +71,13 @@ export default React.createClass({
 
     if (this.state.phase == PHASE_DONE) {
       return (
-        <Alert type="success">Cool, check your email to verify the subscription.</Alert>
+        <Alert type="success">Thank you for subscribing. Just one more step, check your email and confirm it. We are doing this to prevent other people subscribe on your behalf :)</Alert>
       )
     }
 
     if (this.state.phase == PHASE_ERROR) {
       return (
-        <Alert type="success">Err, <a href="#">re-try</a> again.</Alert>
+        <Alert type="success">Err, <a href="#" onClick={this.handleSubscribe}>re-try</a> again.</Alert>
       )
     }
 

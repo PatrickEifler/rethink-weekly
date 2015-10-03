@@ -9,7 +9,7 @@ function serialize(obj) {
 }
 
 export function Post(url, data) {
-  let request = new XMLHttpRequest()
+  const request = new XMLHttpRequest()
   return new Promise(function(resolve, reject) {
     request.onload = function () {
       if (request.status >= 200 && request.status <400) {
@@ -26,6 +26,7 @@ export function Post(url, data) {
     request.open('POST', url, true)
     console.log(serialize(data))
     console.log(data)
+    request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded")
     request.send(serialize(data))
   })
 }
