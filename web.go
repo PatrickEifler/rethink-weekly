@@ -204,7 +204,7 @@ func ConfirmSubscribeHandler() http.HandlerFunc {
 		token = string(vars["token"])
 
 		fmt.Fprintf(out, "\ntoken= %s\n", token)
-		res, err := r.DB("rewl").Table("subscribers").Filter(map[string]string{
+		res, err := r.Table("subscribers").Filter(map[string]string{
 			"confirm_token": token,
 			"status":        "pending",
 		}).Run(session)
@@ -233,6 +233,7 @@ func ConfirmSubscribeHandler() http.HandlerFunc {
 			}).Run(session)
 
 			yeller.ApproveSubscriber(&existedSubscriber)
+			fmt.Fprintf(rw, "Cool, we all set. We will send you weekly update from now on :)")
 		} else {
 			fmt.Fprintf(rw, "%s", `{"result":"ok","message":"not found or approved"}`)
 			fmt.Fprintf(out, "INvalid subscriber token")
