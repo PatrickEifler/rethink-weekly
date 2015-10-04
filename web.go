@@ -63,7 +63,7 @@ func runServer() {
 	router.HandleFunc("/api/subscriptions", SubscribeHandler())
 	router.HandleFunc("/api/subscriptions/{id:[0-9a-zA-Z-=_]+}", UnSubscribeHandler())
 	router.HandleFunc("/api/subscriptions/{token:[0-9a-zA-Z-=_]+}/confirm", ConfirmSubscribeHandler())
-	router.HandleFunc("/api/subscriptions/{id:[0-9a-zA-Z-=_]+}/ubsubscribe", UnSubscribeHandler())
+	router.HandleFunc("/api/subscriptions/{token:[0-9a-zA-Z-=_]+}/ubsubscribe", UnSubscribeHandler())
 
 	stat := stats.New()
 	h := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -216,8 +216,8 @@ func ConfirmSubscribeHandler() http.HandlerFunc {
 
 		fmt.Fprintf(out, "\nConfirm token= %s\n", token)
 		res, err := r.Table("subscribers").Filter(map[string]string{
-			//"confirm_token": token,
-			"status": "pending",
+			"confirm_token": token,
+			"status":        "pending",
 		}).Run(session)
 		if err != nil {
 			fmt.Fprintf(out, "Err: %v", err)
@@ -258,6 +258,44 @@ func ConfirmSubscribeHandler() http.HandlerFunc {
 func UnSubscribeHandler() http.HandlerFunc {
 	return func(rw http.ResponseWriter, req *http.Request) {
 		vars := mux.Vars(req)
-		fmt.Fprintln(rw, vars["id"])
+
+		fmt.Fprintf(out, "db= %s", os.Getenv("RETHINK_DB"))
+
+		var token string
+		token = string(vars["token"])
+
+		fmt.Fprintf(out, "\nUnsub token= %s\n", token)
+		res, err := r.Table("subscribers").Filter(map[string]string{
+			"confirm_token": token,
+			"status":        "approved",
+		}).Run(session)
+		if err != nil {
+			fmt.Fprintf(out, "Err: %v", err)
+		}
+
+		if err := res.Err(); err != nil {
+			fmt.Println("Query error ", err)
+		}
+
+		var existedSubscriber Subscriber
+		err = res.One(&existedSubscriber)
+		if err != nil {
+			fmt.Print("Error scanning database result: %s", err)
+			fmt.Fprintf(rw, "%s", `{"result":"ok","message":"not found or approved"}`)
+			return
+		}
+
+		res.Close()
+		fmt.Println("Existed= %v", existedSubscriber)
+
+		if existedSubscriber.Id != "" {
+			r.Table("subscribers").Get(existedSubscriber.Id).Delete().Run(session)
+			yeller.UnSubscribe(&existedSubscriber)
+			fmt.Fprintf(rw, "We won't send you any email from now on")
+		} else {
+			fmt.Fprintf(rw, "%s", `{"result":"ok","message":"the subscriber isn't found"}`)
+			fmt.Fprintf(out, "INvalid subscriber token")
+		}
 	}
+
 }

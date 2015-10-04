@@ -56,6 +56,17 @@ func (m *MockedMail) ApproveSubscriber(s *Subscriber) (bool, error) {
 	return true, nil
 }
 
+func (m *MockedMail) UnSubscribe(s *Subscriber) (bool, error) {
+	m.Called(map[string]string{
+		"status":    s.Status,
+		"email":     s.Email,
+		"firstname": s.FirstName,
+		"lastname":  s.LastName,
+	})
+
+	return true, nil
+}
+
 func (m *MockedMail) SendNewsletter() (int, error) {
 	//m.Called()
 	return 1, nil
@@ -103,6 +114,8 @@ func TestShowIssue(t *testing.T) {
 	//@TODO test JSON
 	assert.Contains(t, res.Body.String(), "title")
 	assert.Contains(t, res.Body.String(), "desc")
+	assert.Contains(t, res.Body.String(), "foo.com")
+	assert.Contains(t, res.Body.String(), "bar.com")
 }
 
 func TestSubscribe(t *testing.T) {
@@ -157,6 +170,34 @@ func TestConfirmSubscription(t *testing.T) {
 
 	router.ServeHTTP(res, req)
 	assert.Equal(t, res.Code, 200)
-	assert.Contains(t, res.Body.String(), "a")
+	assert.Contains(t, res.Body.String(), "we all set")
+	yeller.(*MockedMail).AssertExpectations(t)
+}
+
+func TestUbSubscribeHandler(t *testing.T) {
+	setupTest()
+	defer teardownTest()
+	yeller = &MockedMail{}
+
+	newSubscriber := testDataSubscriber()
+	newSubscriber["confirm_token"] = "i3khicon"
+	newSubscriber["id"] = "i<3_khi_con"
+	newSubscriber["status"] = "approved"
+
+	r.Table("subscribers").Insert(newSubscriber).Run(session)
+
+	res := httptest.NewRecorder()
+
+	router := mux.NewRouter().StrictSlash(false)
+	router.HandleFunc("/api/subscriptions/{token:[0-9a-zA-Z-=_]+}/ubsubscribe", UnSubscribeHandler())
+
+	approveSubscriber := testDataSubscriber()
+	approveSubscriber["status"] = "approved"
+	yeller.(*MockedMail).On("UnSubscribe", approveSubscriber).Return(true, nil)
+	req, _ := http.NewRequest("GET", "http://127.0.0.1:3000/api/subscriptions/i3khicon/ubsubscribe", nil)
+
+	router.ServeHTTP(res, req)
+	assert.Equal(t, res.Code, 200)
+	assert.Contains(t, res.Body.String(), "We won't send you any email from now on")
 	yeller.(*MockedMail).AssertExpectations(t)
 }
