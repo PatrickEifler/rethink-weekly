@@ -15,7 +15,7 @@ import (
 var (
 	session *r.Session
 	out     io.Writer
-	yeller  *mailer
+	yeller  notifier
 )
 
 func main() {

@@ -33,6 +33,13 @@ type Subscriber struct {
 
 type Issues []*Issue
 
+type Link struct {
+	Id    string `gorethink:"id"`
+	Title string `gorethink:"title"`
+	Desc  string `gorethink:"desc"`
+	Uri   string `gorethink:"uri"`
+}
+
 func template() *render.Render {
 	r := render.New(render.Options{
 		Layout:     "layout",
@@ -111,6 +118,7 @@ func IssuesShowHandler() http.HandlerFunc {
 	return func(rw http.ResponseWriter, req *http.Request) {
 		vars := mux.Vars(req)
 		res, err := r.Table("issues").Get(vars["id"]).Run(session)
+		fmt.Fprintf(out, "Get issue: %s", vars["id"])
 		if err != nil {
 			fmt.Fprintf(out, "Err: %v\n", err)
 		}
@@ -231,9 +239,12 @@ func ConfirmSubscribeHandler() http.HandlerFunc {
 		fmt.Println("Existed= %v", existedSubscriber)
 
 		if existedSubscriber.Id != "" {
-			r.DB("test").Table("subscribers").Get(existedSubscriber.Id).Update(map[string]string{
+			r.Table("subscribers").Get(existedSubscriber.Id).Update(map[string]string{
 				"status": "approved",
 			}).Run(session)
+
+			res, _ = r.Table("subscribers").Get(existedSubscriber.Id).Run(session)
+			res.One(&existedSubscriber)
 
 			yeller.ApproveSubscriber(&existedSubscriber)
 			fmt.Fprintf(rw, "Cool, we all set. We will send you weekly update from now on :)")

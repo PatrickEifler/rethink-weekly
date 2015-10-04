@@ -28,10 +28,9 @@ func setupTest() {
 	r.DB("test").TableCreate("subscribers").Run(session)
 
 	out = os.Stdout
-
-	yeller = &mailer{}
 }
 
 func teardownTest() {
-
+	//r.DB("test").Table("issues").Delete().Run(session)
+	r.DB("test").Table("subscribers").Delete().Run(session)
 }
