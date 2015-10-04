@@ -7,10 +7,10 @@ import (
 	"fmt"
 	r "github.com/dancannon/gorethink"
 	"github.com/gorilla/mux"
+	"github.com/thoas/stats"
 	"github.com/unrolled/render" // or "gopkg.in/unrolled/render.v1"
 	"net/http"
-	//"os"
-	"github.com/thoas/stats"
+	"os"
 )
 
 type App struct {
@@ -200,13 +200,16 @@ func SubscribeHandler() http.HandlerFunc {
 func ConfirmSubscribeHandler() http.HandlerFunc {
 	return func(rw http.ResponseWriter, req *http.Request) {
 		vars := mux.Vars(req)
+
+		fmt.Fprintf(out, "db= %s", os.Getenv("RETHINK_DB"))
+
 		var token string
 		token = string(vars["token"])
 
-		fmt.Fprintf(out, "\ntoken= %s\n", token)
+		fmt.Fprintf(out, "\nConfirm token= %s\n", token)
 		res, err := r.Table("subscribers").Filter(map[string]string{
-			"confirm_token": token,
-			"status":        "pending",
+			//"confirm_token": token,
+			"status": "pending",
 		}).Run(session)
 		if err != nil {
 			fmt.Fprintf(out, "Err: %v", err)
@@ -228,7 +231,7 @@ func ConfirmSubscribeHandler() http.HandlerFunc {
 		fmt.Println("Existed= %v", existedSubscriber)
 
 		if existedSubscriber.Id != "" {
-			r.Table("subscribers").Get(existedSubscriber.Id).Update(map[string]string{
+			r.DB("test").Table("subscribers").Get(existedSubscriber.Id).Update(map[string]string{
 				"status": "approved",
 			}).Run(session)
 
