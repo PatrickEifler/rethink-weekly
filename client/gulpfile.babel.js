@@ -7,6 +7,8 @@ import watchify from 'watchify'
 import reactify from 'reactify'
 import streamify from 'gulp-streamify'
 
+import sass from 'gulp-sass'
+
 // REF https://gist.github.com/danharper/3ca2273125f500429945
 import sourcemaps from 'gulp-sourcemaps'
 import buffer from 'vinyl-buffer'
@@ -19,7 +21,11 @@ const path = {
   DEST: 'dist',
   DEST_BUILD: 'dist/build',
   DEST_SRC: 'dist/src',
-  ENTRY_POINT: './src/js/app.js'
+  ENTRY_POINT: './src/js/app.js',
+
+  SCSS_ENTRY: 'src/sass/app.scss',
+  SCSS_SRC:   'src/sass/**/*.scss',
+  CSS_DEST: 'dist/src/css/'
 };
 
 const copy = function(){
@@ -35,8 +41,16 @@ const copy = function(){
 
 gulp.task('copy', copy)
 
+const style = function() {
+  gulp.src(path.SCSS_ENTRY)
+    .pipe(sass())
+    .pipe(gulp.dest(path.CSS_DEST))
+}
+gulp.task('style', style)
+
 gulp.task('watch', function() {
   gulp.watch(path.HTML, ['copy'])
+  gulp.watch(path.SCSS_SRC, ['style'])
 
   const bundler = watchify(browserify(path.ENTRY_POINT, { debug: true, transforms: ["reactify", {"es6": true}] }).transform(babel))
 
@@ -57,6 +71,7 @@ gulp.task('watch', function() {
   })
 
   copy()
+  style()
   rebundle()
 })
 
