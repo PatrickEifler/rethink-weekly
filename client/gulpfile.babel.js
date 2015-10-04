@@ -32,13 +32,7 @@ const copy = function(){
   gulp
     .src(path.HTML)
     .pipe(gulp.dest(path.DEST))
-
-  //@TODO Improve this and switch to sass
-  gulp
-    .src("src/css/emui.css")
-    .pipe(gulp.dest("dist/src/css/"))
 }
-
 gulp.task('copy', copy)
 
 const style = function() {
