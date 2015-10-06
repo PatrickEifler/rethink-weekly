@@ -14,6 +14,8 @@ import sourcemaps from 'gulp-sourcemaps'
 import buffer from 'vinyl-buffer'
 import babel from 'babelify'
 
+import autoprefixer from 'gulp-autoprefixer'
+
 const path = {
   HTML: 'src/index.html',
   MINIFIED_OUT: 'build.min.js',
@@ -36,8 +38,16 @@ const copy = function(){
 gulp.task('copy', copy)
 
 const style = function() {
+  const sassOptions = {
+      errLogToConsole: true,
+        outputStyle: 'expanded'
+  }
+
   gulp.src(path.SCSS_ENTRY)
-    .pipe(sass())
+    .pipe(sourcemaps.init())
+    .pipe(sass(sassOptions).on('error', sass.logError))
+    .pipe(sourcemaps.write())
+    .pipe(autoprefixer())
     .pipe(gulp.dest(path.CSS_DEST))
 }
 gulp.task('style', style)
