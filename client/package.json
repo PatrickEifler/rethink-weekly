@@ -4,7 +4,7 @@
   "description": "RethinkDB Weekly",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --opts ./test/js/mocha.opts --compilers js:babel/register --recursive test/js/**/*.jsx"
+    "test": "mocha --opts ./test/js/mocha.opts --compilers js:babel/register --recursive test/js/**/*.js"
   },
   "repository": {
     "type": "git",
