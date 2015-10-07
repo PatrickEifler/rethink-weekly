@@ -4,8 +4,10 @@ import SubscribeForm from './form/subscribe'
 import IssueList from './issuelist'
 import IssueDetail from './issuedetail'
 import About from './about'
+import NavMenu from './nav'
 
 import React  from 'react'
+import createBrowserHistory from 'history/lib/createBrowserHistory'
 import { Router, Route, Link, IndexRoute } from 'react-router'
 
 import {
@@ -35,12 +37,13 @@ import {
   const App = React.createClass({
     render: function() {
       return (
-        <div>
+        <div className="page-wrapper">
+          <NavMenu />
           <Header />
-          <Row>
+          <div className="page-body">
             <SubscribeForm />
             {this.props.children}
-          </Row>
+          </div>
           <Footer />
         </div>
       )
@@ -64,12 +67,12 @@ import {
 //    </Router>
 //  ), document.getElementById('app'))
   React.render((
-    <Router>
-      <Route path="/" component={App}>
+    <Router history={createBrowserHistory()}>
+      <Route name="home" path="/" component={App}>
         <IndexRoute component={IssueList}/>
-        <Route path="issues" component={IssueList} />
+        <Route name="issues" path="issues" component={IssueList} />
         <Route path="issues/:id" component={IssueDetail} />
-        <Route path="about" component={About} />
+        <Route name="about" path="about" component={About} />
       </Route>
     </Router>
   ), document.getElementById('app'))

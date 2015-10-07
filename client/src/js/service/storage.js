@@ -3,11 +3,13 @@ import {Get, Post} from './request'
 
 export default class Storage {
   constructor() {
-    this.apiUri = "/"
+    const port = window.location.port == "80"? '':`:${window.location.port}`
+    console.log(window.location)
+    this.apiUri = `//${window.location.hostname}${port}`
   }
 
   generateUrl(path) {
-    return this.apiUri + path
+    return `${this.apiUri}/${path}`
   }
 
   // Subscribe into our mailing list
@@ -23,8 +25,7 @@ export default class Storage {
 
   // Get a particular issue
   getIssue(id) {
-    console.log("WIll get issue", id)
-    return Get(`api/issues/${id}`)
+    return Get(this.generateUrl(`api/issues/${id}`))
   }
 
   // Get our stas

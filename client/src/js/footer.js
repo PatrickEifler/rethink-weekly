@@ -3,7 +3,7 @@ import React  from 'react'
 export default React.createClass({
   render: function(){
     return (
-      <footer>
+      <footer className="page-footer">
         <p>
           By <a href="http://noty.im">kureikain</a>.
           Support me by buying my book <a href="http://leanpub.com/simplyrethinkdb">Simply RethinkDB</a>

@@ -37,6 +37,7 @@
     "gulp-sourcemaps": "^1.5.2",
     "gulp-streamify": "^1.0.2",
     "gulp-uglify": "^1.4.1",
+    "history": "^1.12.2",
     "mocha": "^2.3.3",
     "mocha-babel": "^3.0.0",
     "nock": "^2.13.0",
