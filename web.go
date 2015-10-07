@@ -93,7 +93,6 @@ func IssuesHandler() http.HandlerFunc {
 		if err != nil {
 			fmt.Fprintf(out, "Err: %v\n", err)
 		}
-
 		if err = res.Err(); err != nil {
 			fmt.Println(err)
 		}
@@ -117,7 +116,9 @@ func IssuesHandler() http.HandlerFunc {
 func IssuesShowHandler() http.HandlerFunc {
 	return func(rw http.ResponseWriter, req *http.Request) {
 		vars := mux.Vars(req)
-		res, err := r.Table("issues").Get(vars["id"]).Run(session)
+		res, err := r.Table("links").Filter(map[string]string{
+			"issue": vars["id"],
+		}).Run(session)
 		fmt.Fprintf(out, "Get issue: %s", vars["id"])
 		if err != nil {
 			fmt.Fprintf(out, "Err: %v\n", err)
@@ -128,16 +129,17 @@ func IssuesShowHandler() http.HandlerFunc {
 		}
 
 		defer res.Close()
-		var row interface{}
-		err = res.One(&row)
+		var rows []interface{}
+		err = res.All(&rows)
 		if err != nil {
 			fmt.Fprintf(out, "Err: %v\n", err)
 		}
 
-		body, err := json.Marshal(row)
+		body, err := json.Marshal(rows)
 		if err != nil {
 			fmt.Fprintln(out, "Err: %v", err)
 		}
+
 		fmt.Fprintln(out, string(body))
 		fmt.Fprintf(rw, string(body))
 	}

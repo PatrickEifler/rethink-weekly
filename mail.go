@@ -29,7 +29,7 @@ func (*mailer) NotifiySubscriber(subscriber *Subscriber) (bool, error) {
 	_, _, err := mg.Send(m)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 		return false, err
 	}
 	return true, nil
