@@ -27,8 +27,19 @@ const path = {
 
   SCSS_ENTRY: 'src/sass/app.scss',
   SCSS_SRC:   'src/sass/**/*.scss',
-  CSS_DEST: 'dist/src/css/'
-};
+  CSS_DEST: 'dist/src/css/',
+
+  IMAGE_SRC: 'src/images/**',
+  IMAGE_DEST: 'dist/images',
+}
+
+const copyImage = function() {
+  [path.IMAGE_DEST].map( (imageTo) => {
+    gulp.src(path.IMAGE_SRC)
+      .pipe(gulp.dest(imageTo))
+  })
+}
+gulp.task('image', copyImage)
 
 const copy = function(){
   gulp
@@ -55,6 +66,7 @@ gulp.task('style', style)
 gulp.task('watch', function() {
   gulp.watch(path.HTML, ['copy'])
   gulp.watch(path.SCSS_SRC, ['style'])
+  gulp.watch(path.IMAGE_SRC, ['image'])
 
   const bundler = watchify(browserify(path.ENTRY_POINT, { debug: true, transforms: ["reactify", {"es6": true}] }).transform(babel))
 

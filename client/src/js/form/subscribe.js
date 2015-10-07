@@ -75,29 +75,35 @@ export default React.createClass({
       )
     }
 
+    let alertBox
     if (this.state.phase == PHASE_ERROR) {
-      return (
-        <Alert type="success">Err, <a href="#" onClick={this.handleSubscribe}>re-try</a> again.</Alert>
-      )
+      alertBox = <Alert type="success">Err, <a href="#" onClick={this.handleSubscribe}>re-try</a> again.</Alert>
+    } else {
     }
 
     return (
-      <div>
-      <Form>
-        <InputGroup>
-          <InputGroup.Section grow>
-            <FormInput type="text" placeholder="Email address ..." valueLink={this.linkState('email')} />
-          </InputGroup.Section>
-        </InputGroup>
-        <InputGroup>
-          <InputGroup.Section grow>
-            <FormInput type="text" placeholder="First name...(Optional)" valueLink={this.linkState('firstname')} />
-            <FormInput type="text" placeholder="Last name...(Optinal)" valueLink={this.linkState('lastname')} />
-          </InputGroup.Section>
-        </InputGroup>
+      <div className="demo-banner demo-banner--secondary">
+        <Container maxWidth={768} className="demo-container">
+          {alertBox}
+          <Form>
+            <InputGroup>
+              <InputGroup.Section grow>
+                <FormInput type="text" placeholder="Email address ..." valueLink={this.linkState('email')} />
+              </InputGroup.Section>
+            </InputGroup>
+            <InputGroup>
+              <InputGroup.Section grow>
+                <FormInput type="text" placeholder="First name...(Optional)" valueLink={this.linkState('firstname')} />
+              </InputGroup.Section>
+              <InputGroup.Section grow>
+                <FormInput type="text" placeholder="Last name...(Optinal)" valueLink={this.linkState('lastname')} />
+              </InputGroup.Section>
+            </InputGroup>
 
-        <Button type="default" onClick={this.handleSubscribe}>Subscribe now</Button>
-      </Form>
+            <Button type="primary" onClick={this.handleSubscribe}>Subscribe now</Button>
+            <p>We hate spam, just like you</p>
+          </Form>
+        </Container>
       </div>
     )
   }

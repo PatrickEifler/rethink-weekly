@@ -18,21 +18,21 @@ export default React.createClass({
   componentWillMount: function() {
     const id = this.props.params.id
     storage.getIssue(id)
-      .then((issue) => { this.setState(issue)})
+      .then((issue) => { this.setState({links: issue})})
   },
 
   render: function(){
     return (
-      <Row>
-        <Link to="/">Home</Link>
-
+      <div>
         {this.state.links.map(link => (
-          <Row key={link.id}>
-            <a href={link.uri}>{link.title}</a>
-            <p>{link.desc}</p>
-          </Row>
+          <ul key={link.id}>
+            <li>
+              <h3><a href={link.uri}>{link.title}</a> by {link.author}</h3>
+              <p>{link.desc}</p>
+            </li>
+          </ul>
         ))}
-      </Row>
+      </div>
     )
   }
 

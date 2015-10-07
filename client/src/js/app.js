@@ -39,10 +39,12 @@ import {
       return (
         <div className="page-wrapper">
           <NavMenu />
-          <Header />
           <div className="page-body">
+            <Header />
             <SubscribeForm />
-            {this.props.children}
+            <Container maxWidth={768} className="demo-container">
+              {this.props.children}
+            </Container>
           </div>
           <Footer />
         </div>
@@ -66,6 +68,13 @@ import {
 //      </Route>
 //    </Router>
 //  ), document.getElementById('app'))
+
+// Using https://github.com/rackt/react-router/blob/master/docs/guides/basics/Histories.md#createbrowserhistory
+// We want browser history for better looking URL instead of hash URL
+// This is used with the package https://github.com/rackt/history
+// We are writing our own Go lang server for serving static file.
+// The server has to be able to handle those link, basiclly whatever URL, we always show index.html file,
+// unless the /api route or some special route like /stats
   React.render((
     <Router history={createBrowserHistory()}>
       <Route name="home" path="/" component={App}>

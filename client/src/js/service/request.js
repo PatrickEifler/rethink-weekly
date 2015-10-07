@@ -24,8 +24,6 @@ export function Post(url, data) {
     }
 
     request.open('POST', url, true)
-    console.log(serialize(data))
-    console.log(data)
     request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded")
     request.send(serialize(data))
   })

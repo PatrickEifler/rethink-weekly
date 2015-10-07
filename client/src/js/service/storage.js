@@ -4,7 +4,6 @@ import {Get, Post} from './request'
 export default class Storage {
   constructor() {
     const port = window.location.port == "80"? '':`:${window.location.port}`
-    console.log(window.location)
     this.apiUri = `//${window.location.hostname}${port}`
   }
 

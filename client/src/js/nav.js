@@ -38,7 +38,7 @@ export default React.createClass({
     return (
       <nav className="primary-nav">
         <Link to="home" className="primary-nav__brand special" title="Home">
-          <img src="./images/elemental-logo-paths.svg" className="primary-nav__brand-src" />
+          <img src="./images/mail.svg" className="primary-nav__brand-src" />
         </Link>
         <button onClick={this.toggleMenu} className="primary-nav__item primary-nav-menu-trigger">
           <span className="primary-nav-menu-trigger-icon octicon octicon-navicon" />
@@ -49,8 +49,8 @@ export default React.createClass({
             {menuItems}
           </div>
         </div>
-        <a href="https://github.com/elementalui/elemental" target="_blank" title="View on GitHub" className="primary-nav__brand right">
-          <img src="./images/github-logo.svg" className="primary-nav__brand-src" />
+        <a href="https://github.com/axcoto/rethink-weekly" target="_blank" title="View on GitHub" className="primary-nav__brand right">
+          <img src="./images/github.svg" className="primary-nav__brand-src" />
         </a>
       </nav>
     )
