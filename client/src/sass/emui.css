@@ -4032,11 +4032,11 @@ h3 {
 }
 .primary-nav__brand.special {
   height: 65px;
-  width: 87px;
-  left: -15px;
+  width: 65px;
+  left: 0px;
   margin: 0;
   overflow: hidden;
-  top: -13px;
+  top: 0px;
 }
 .primary-nav__brand-src {
   display: block;
