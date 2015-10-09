@@ -22,8 +22,8 @@ func (*mailer) NotifiySubscriber(subscriber *Subscriber) (bool, error) {
 	m := mg.NewMessage(
 		fmt.Sprintf("Vinh <%s>", os.Getenv("MAIL_FROM")), // From
 		"Verify subscriptions on RethinkDB Goodies",      // Subject
-		fmt.Sprintf("Hi please follow this link http://127.0.0.1:3000/api/subscriptions/%s/confirm to verify. You can ignore if you don't want to subscribe.", subscriber.ConfirmToken), // Plain-text body
-		fmt.Sprintf("%s <%s>", subscriber.FirstName, subscriber.Email),                                                                                                                  // Recipients (vararg list)
+		fmt.Sprintf("Hi please follow this link http://%s/api/subscriptions/%s/confirm to verify. You can ignore if you don't want to subscribe.", os.Getenv("SITE_URL"), subscriber.ConfirmToken), // Plain-text body
+		fmt.Sprintf("%s <%s>", subscriber.FirstName, subscriber.Email),                                                                                                                             // Recipients (vararg list)
 	)
 
 	_, _, err := mg.Send(m)
