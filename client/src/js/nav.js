@@ -29,7 +29,7 @@ export default React.createClass({
     var menuClass = this.state.mobileMenuIsVisible ? 'primary-nav-menu is-visible' : 'primary-nav-menu is-hidden';
     var menuItems = NavItems.map(function(item) {
       return (
-        <Link key={item.value} className="primary-nav__item" onClick={self.toggleMenu} to={item.value}>
+        <Link key={item.value + "#body"} className="primary-nav__item" onClick={self.toggleMenu} to={item.value}>
           <span className="primary-nav__item-inner">{item.label}</span>
         </Link>
       )
@@ -38,7 +38,7 @@ export default React.createClass({
     return (
       <nav className="primary-nav">
         <Link to="home" className="primary-nav__brand special" title="Home">
-          <img src="./images/mail.svg" className="primary-nav__brand-src" />
+          <img src="/images/mail.svg" className="primary-nav__brand-src" />
         </Link>
         <button onClick={this.toggleMenu} className="primary-nav__item primary-nav-menu-trigger">
           <span className="primary-nav-menu-trigger-icon octicon octicon-navicon" />
@@ -50,7 +50,7 @@ export default React.createClass({
           </div>
         </div>
         <a href="https://github.com/axcoto/rethink-weekly" target="_blank" title="View on GitHub" className="primary-nav__brand right">
-          <img src="./images/github.svg" className="primary-nav__brand-src" />
+          <img src="/images/github.svg" className="primary-nav__brand-src" />
         </a>
       </nav>
     )

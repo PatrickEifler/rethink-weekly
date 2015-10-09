@@ -25,7 +25,7 @@ export default React.createClass({
     return (
       <div>
         {this.state.links.map(link => (
-          <ul key={link.id}>
+          <ul className="issuelist" key={link.id}>
             <li>
               <h3><a href={link.uri}>{link.title}</a> by {link.author}</h3>
               <p>{link.desc}</p>

@@ -27,11 +27,9 @@ export default React.createClass({
       {this.state.issues.map(issue => (
         // We need the key attr for react https://fb.me/react-warning-keys
         <Row key={issue.id}>
-          <Col sm="1/2">
+          <Col>
             <Link to={"/issues/" + issue.id}>{issue.name}</Link>
-          </Col>
-          <Col sm="1/2">
-            <Link to={"/issues/" + issue.id}>{issue.date}</Link>
+            &nbsp;-&nbsp;{new Date(issue.date).toDateString()}
           </Col>
         </Row>
       ))}
