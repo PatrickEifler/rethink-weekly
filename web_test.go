@@ -1,8 +1,8 @@
 package main
 
 import (
-	//"encoding/json"
 	"bytes"
+	"encoding/json"
 	r "github.com/dancannon/gorethink"
 	"github.com/gorilla/mux"
 	"github.com/stretchr/testify/assert"
@@ -22,23 +22,29 @@ func testDataSubscriber() map[string]string {
 }
 
 func testDataIssue() map[string]interface{} {
+	return map[string]interface{}{
+		"name": "Issue #1",
+		"id":   "issue-1",
+	}
+}
+
+func testDataLinks() [2]Link {
 	var links [2]Link
 	links[0] = Link{
-		Uri:   "foo.com",
-		Title: "foo",
-		Desc:  "foo",
+		Uri:   "firsturi.com",
+		Title: "first link",
+		Desc:  "first link desc",
+		Issue: "issue-1",
+		Id:    "1",
 	}
 	links[1] = Link{
-		Uri:   "bar.com",
-		Title: "bar",
-		Desc:  "bar",
+		Uri:   "seconduri.com",
+		Title: "second link",
+		Desc:  "second link desc",
+		Issue: "issue-1",
+		Id:    "2",
 	}
-
-	return map[string]interface{}{
-		"name":  "Issue #1",
-		"id":    "issue-1",
-		"links": links,
-	}
+	return links
 }
 
 type MockedMail struct {
@@ -81,6 +87,26 @@ func (m *MockedMail) NotifiySubscriber(s *Subscriber) (bool, error) {
 	return true, nil
 }
 
+func TestStats(t *testing.T) {
+	setupTest()
+	defer teardownTest()
+
+	r.Table("issues").Insert(testDataIssue()).Run(session)
+	r.Table("subscribers").Insert(testDataSubscriber()).Run(session)
+
+	res := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "http://127.0.0.1:3000/api/stats", nil)
+
+	h := StatsHandler()
+	h.ServeHTTP(res, req)
+	assert.Equal(t, res.Code, 200)
+	//@TODO test JSON
+	assert.Equal(t, res.Body.String(), `{"issues":1,"subscribers":1}`)
+	assert.Contains(t, res.Body.String(), "1")
+	assert.Contains(t, res.Body.String(), "subscribers")
+	assert.Contains(t, res.Body.String(), "issues")
+}
+
 func TestIssue(t *testing.T) {
 	setupTest()
 	defer teardownTest()
@@ -100,22 +126,25 @@ func TestIssue(t *testing.T) {
 
 func TestShowIssue(t *testing.T) {
 	setupTest()
-	//defer teardownTest()
+	defer teardownTest()
 
 	r.Table("issues").Insert(testDataIssue()).Run(session)
+	r.Table("links").Insert(testDataLinks()).Run(session)
+
 	res := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "http://127.0.0.1:3000/api/issues/issue-1", nil)
 
 	router := mux.NewRouter().StrictSlash(false)
-	router.HandleFunc("/api/issues/{id:[0-9a-zA-Z-]+}", IssuesShowHandler())
+	router.HandleFunc("/api/issues/{id:[0-9a-zA-Z-_]+}", IssuesShowHandler())
 
 	router.ServeHTTP(res, req)
 	assert.Equal(t, res.Code, 200)
 	//@TODO test JSON
-	assert.Contains(t, res.Body.String(), "title")
-	assert.Contains(t, res.Body.String(), "desc")
-	assert.Contains(t, res.Body.String(), "foo.com")
-	assert.Contains(t, res.Body.String(), "bar.com")
+	links := make([]Link, 0)
+	json.Unmarshal(res.Body.Bytes(), &links)
+	assert.Len(t, links, 2)
+	assert.Contains(t, res.Body.String(), "firsturi.com")
+	assert.Equal(t, links[1].Uri, "seconduri.com")
 }
 
 func TestSubscribe(t *testing.T) {

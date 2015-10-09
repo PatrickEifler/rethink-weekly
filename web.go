@@ -38,6 +38,7 @@ type Link struct {
 	Title string `gorethink:"title"`
 	Desc  string `gorethink:"desc"`
 	Uri   string `gorethink:"uri"`
+	Issue string `gorethink:"issue"`
 }
 
 func template() *render.Render {
@@ -60,6 +61,7 @@ func runServer() {
 	router.HandleFunc("/api/issues", IssuesHandler())
 	router.HandleFunc("/api/issues/{id:[0-9a-zA-Z-]+}", IssuesShowHandler())
 
+	router.HandleFunc("/api/stats", StatsHandler())
 	router.HandleFunc("/api/subscriptions", SubscribeHandler())
 	router.HandleFunc("/api/subscriptions/{id:[0-9a-zA-Z-=_]+}", UnSubscribeHandler())
 	router.HandleFunc("/api/subscriptions/{token:[0-9a-zA-Z-=_]+}/confirm", ConfirmSubscribeHandler())
@@ -76,14 +78,63 @@ func runServer() {
 	})
 	router.HandleFunc("/_stats", h)
 
+	router.HandleFunc("/issues/{id:[0-9a-zA-Z-]+}", HomeHandler())
+	router.HandleFunc("/about", HomeHandler())
+	router.HandleFunc("/issues", HomeHandler())
+
 	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./client/dist/")))
 	fmt.Fprintf(out, "Server run on port 3000")
 	run(router)
 }
 
 func HomeHandler() http.HandlerFunc {
-	return func(rw http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(rw, "Home")
+	return func(rw http.ResponseWriter, req *http.Request) {
+		//http.ServeFile(rw, req, r.URL.Path[1:])
+		http.ServeFile(rw, req, "./client/dist/index.html")
+	}
+}
+
+func StatsHandler() http.HandlerFunc {
+	return func(rw http.ResponseWriter, req *http.Request) {
+		res, err := r.Table("issues").Count().Run(session)
+		if err != nil {
+			fmt.Fprintf(out, "Err: %v\n", err)
+		}
+		if err = res.Err(); err != nil {
+			fmt.Println(err)
+		}
+
+		var issueCount int
+		err = res.One(&issueCount)
+		if err != nil {
+			fmt.Fprintf(out, "Err: %v\n", err)
+		}
+		res.Close()
+
+		res, err = r.Table("subscribers").Count().Run(session)
+		if err != nil {
+			fmt.Fprintf(out, "Err: %v\n", err)
+		}
+		if err = res.Err(); err != nil {
+			fmt.Println(err)
+		}
+
+		var subscriberCount int
+		err = res.One(&subscriberCount)
+		if err != nil {
+			fmt.Fprintf(out, "Err: %v\n", err)
+		}
+		res.Close()
+
+		body, err := json.Marshal(map[string]int{
+			"issues":      issueCount,
+			"subscribers": subscriberCount,
+		})
+		if err != nil {
+			fmt.Fprintf(out, "Err: %v", err)
+		}
+		fmt.Fprintln(out, string(body))
+		fmt.Fprintf(rw, string(body))
 	}
 }
 

@@ -26,11 +26,13 @@ func setupTest() {
 
 	r.DB("test").TableCreate("issues").Run(session)
 	r.DB("test").TableCreate("subscribers").Run(session)
+	r.DB("test").TableCreate("links").Run(session)
 
 	out = os.Stdout
 }
 
 func teardownTest() {
-	//r.DB("test").Table("issues").Delete().Run(session)
+	r.DB("test").Table("issues").Delete().Run(session)
 	r.DB("test").Table("subscribers").Delete().Run(session)
+	r.DB("test").Table("links").Delete().Run(session)
 }
