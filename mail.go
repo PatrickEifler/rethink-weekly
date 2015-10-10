@@ -2,9 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/mailgun/mailgun-go"
-	"log"
+	//"log"
 	"os"
+
+	"github.com/getsentry/raven-go"
+	"github.com/mailgun/mailgun-go"
 )
 
 type notifier interface {
@@ -29,7 +31,9 @@ func (*mailer) NotifiySubscriber(subscriber *Subscriber) (bool, error) {
 	_, _, err := mg.Send(m)
 
 	if err != nil {
-		log.Panic(err)
+		raven.CaptureErrorAndWait(err, nil)
+		//log.Panic(err)
+		fmt.Fprintf(out, "Mailer error: %v", err)
 		return false, err
 	}
 	return true, nil
@@ -48,6 +52,7 @@ func (*mailer) ApproveSubscriber(subscriber *Subscriber) (bool, error) {
 	_, _, err := mg.Send(m)
 
 	if err != nil {
+		raven.CaptureErrorAndWait(err, nil)
 		return false, err
 	}
 	return true, nil
@@ -66,6 +71,7 @@ func (*mailer) UnSubscribe(subscriber *Subscriber) (bool, error) {
 	_, _, err := mg.Send(m)
 
 	if err != nil {
+		raven.CaptureErrorAndWait(err, nil)
 		return false, err
 	}
 	return true, nil

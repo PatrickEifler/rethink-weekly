@@ -2,14 +2,14 @@ package main
 
 import (
 	"fmt"
-	r "github.com/dancannon/gorethink"
-	//"github.com/gorilla/mux"
 	"log"
 	//"github.com/rs/cors"
-	//"github.com/thoas/stats"
-	"github.com/spf13/cobra"
 	"io"
 	"os"
+
+	r "github.com/dancannon/gorethink"
+	"github.com/getsentry/raven-go"
+	"github.com/spf13/cobra"
 )
 
 var (
@@ -17,6 +17,10 @@ var (
 	out     io.Writer
 	yeller  notifier
 )
+
+func init() {
+	raven.SetDSN(os.Getenv("SENTRY_ENDPOINT"))
+}
 
 func main() {
 	var err error

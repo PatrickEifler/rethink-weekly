@@ -5,12 +5,14 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"net/http"
+	"os"
+
 	r "github.com/dancannon/gorethink"
+	"github.com/getsentry/raven-go"
 	"github.com/gorilla/mux"
 	"github.com/thoas/stats"
 	"github.com/unrolled/render" // or "gopkg.in/unrolled/render.v1"
-	"net/http"
-	"os"
 )
 
 type App struct {
@@ -51,8 +53,17 @@ func template() *render.Render {
 	return r
 }
 
+func Middleware(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintln(out, "** middleware", r.URL)
+		h.ServeHTTP(w, r)
+	})
+}
+
 func run(mux *mux.Router) {
-	http.ListenAndServe("127.0.0.1:3000", mux)
+	listen := os.Getenv("LISTEN")
+	fmt.Fprintf(out, "Server run on %s", listen)
+	http.ListenAndServe(os.Getenv("LISTEN"), mux)
 }
 
 func runServer() {
@@ -83,7 +94,8 @@ func runServer() {
 	router.HandleFunc("/issues", HomeHandler())
 
 	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./client/dist/")))
-	fmt.Fprintf(out, "Server run on port 3000")
+	http.Handle("/", Middleware(router))
+
 	run(router)
 }
 
@@ -98,30 +110,36 @@ func StatsHandler() http.HandlerFunc {
 	return func(rw http.ResponseWriter, req *http.Request) {
 		res, err := r.Table("issues").Count().Run(session)
 		if err != nil {
+			raven.CaptureErrorAndWait(err, nil)
 			fmt.Fprintf(out, "Err: %v\n", err)
 		}
 		if err = res.Err(); err != nil {
+			raven.CaptureErrorAndWait(err, nil)
 			fmt.Println(err)
 		}
 
 		var issueCount int
 		err = res.One(&issueCount)
 		if err != nil {
+			raven.CaptureErrorAndWait(err, nil)
 			fmt.Fprintf(out, "Err: %v\n", err)
 		}
 		res.Close()
 
 		res, err = r.Table("subscribers").Count().Run(session)
 		if err != nil {
+			raven.CaptureErrorAndWait(err, nil)
 			fmt.Fprintf(out, "Err: %v\n", err)
 		}
 		if err = res.Err(); err != nil {
+			raven.CaptureErrorAndWait(err, nil)
 			fmt.Println(err)
 		}
 
 		var subscriberCount int
 		err = res.One(&subscriberCount)
 		if err != nil {
+			raven.CaptureErrorAndWait(err, nil)
 			fmt.Fprintf(out, "Err: %v\n", err)
 		}
 		res.Close()
