@@ -1,0 +1,7 @@
+export SENTRY_ENDPOINT="..."
+export SITE_URL="127.0.0.1:3000"
+export LISTEN="127.0.0.1:3000"
+export RETHINK_HOST="127.0.0.1:28015"
+export RETHINK_DB="rewl"
+export MAIL_FROM="xxx"
+export MAILGUN_API="..."

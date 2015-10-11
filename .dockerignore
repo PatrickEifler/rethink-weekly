@@ -7,3 +7,4 @@ templates
 client/node_modules
 client/test
 client/src
+run.sh
