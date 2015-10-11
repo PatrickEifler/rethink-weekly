@@ -4,3 +4,6 @@ handler
 mail
 mocks
 templates
+client/node_modules
+client/test
+client/src

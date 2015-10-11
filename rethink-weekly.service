@@ -1,0 +1,11 @@
+[Unit]
+Description=RethinkWeekly Service
+After=docker.service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill rewl
+ExecStartPre=-/usr/bin/docker rm rewl
+ExecStartPre=/usr/bin/docker pull rewl
+ExecStart=/usr/bin/docker docker run -v '/etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt' -p 80:3000 alpine
+ExecStop=/usr/bin/docker stop rethinkdb
