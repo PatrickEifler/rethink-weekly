@@ -1,6 +1,12 @@
-require("babel/register")({
-  stage: 0
-})
+// This is to fix double including of babel
+// rethink-weekly/client/node_modules/babel/node_modules/babel-core/lib/polyfill.js:8
+// will throw new Error("only one instance of babel/polyfill is allowed");
+// https://github.com/babel/babel/issues/1019
+if (!global._babelPolyfill) {
+ require("babel/register")({
+   stage: 0
+  })
+}
 
 import jsdom from 'node-jsdom'
 

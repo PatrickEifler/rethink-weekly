@@ -103,6 +103,8 @@ gulp.task('build', function(){
     //.pipe(streamify(uglify({file: path.MINIFIED_OUT})))
     .pipe(gulp.dest(path.MINIFIED_OUT))
     .pipe(gulp.dest(path.DEST_BUILD))
+
+
 })
 
 gulp.task('correctAssetUrl', function(){
