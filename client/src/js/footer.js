@@ -9,7 +9,7 @@ export default React.createClass({
           Support me by buying my book <a href="http://leanpub.com/simplyrethinkdb">Simply RethinkDB</a>.
         </p>
         <p>
-          <a href="github.com/axcoto/rethink-weekly">Build</a> with Golang, React and <a href="elemental-ui.com">ElementalUI</a>.
+          <a href="//github.com/axcoto/rethink-weekly">Build</a> with Golang, React and <a href="http://elemental-ui.com">ElementalUI</a>.
         </p>
       </footer>
     )
