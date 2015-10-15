@@ -63,6 +63,18 @@ const style = function() {
 }
 gulp.task('style', style)
 
+const bundleTest = function() {
+  browserify("test/js/bundle.js", { debug: true, transforms: ["reactify", {"es6": true}] })
+    .transform(babel)
+    .bundle()
+      .pipe(source("bundle.js"))
+      .pipe(buffer())
+      .pipe(sourcemaps.init({ loadMaps: true }))
+      .pipe(sourcemaps.write('./'))
+      .pipe(gulp.dest("test/build"));
+}
+gulp.task('bundleTest', bundleTest)
+
 gulp.task('watch', function() {
   gulp.watch(path.HTML, ['copy'])
   gulp.watch(path.SCSS_SRC, ['style'])
