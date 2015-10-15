@@ -4,26 +4,38 @@ import {
   assert,
   expect,
   TestUtils
-} from '../test_helper';
+} from '../../test_helper';
 
-import { Post, Get } from '../../src/js/service/request'
+import { Post, Get } from '../../../src/js/service/request'
 
 describe('Request', () => {
-  setUp: function () {
-    this.server = sinon.fakeServer.create()
-  },
+  var FakeXMLHttpRequests = require('fakexmlhttprequest')
 
-  tearDown: function () {
-    this.server.restore()
-  },
+  var requests   = []
+  XMLHttpRequest = function() {
+    console.log("here call me")
+    var r =  new FakeXMLHttpRequests()
+    requests.push(r)
+    return r
+  }
 
+
+  let server = sinon.fakeServer.create()
+  let sandbox
+
+  before(()=> {
+    console.log("Invoke")
+    server = sinon.fakeServer.create()
+    console.log(server)
+  })
+
+  after(() => {
+    server.restore()
+  })
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create()
-
-    footerComponent = TestUtils.renderIntoDocument(<Issuelist />)
-    anchors = TestUtils.scryRenderedDOMComponentsWithTag(footerComponent, 'a');
-    menuitems = TestUtils.findRenderedDOMComponentWithTag(footerComponent, 'ul');
+    server = sinon.fakeServer.create()
   })
 
   afterEach(() => {
@@ -31,14 +43,30 @@ describe('Request', () => {
   })
 
   describe('Get', () => {
-    this.server.respondWith("GET", "/foo",
+
+    console.log(server)
+    server.respondWith("GET", "/foo",
             [200, { "Content-Type": "application/json" },
              '[{ "id": 12, "comment": "Hey there" }]']);
 
     it('returns response', (done) => {
-      Get('foo', 'foo=bar').then((result) => {
+      Get('http://foo', 'foo=bar').then((result) => {
         expect(result).to.equal({id: 12, comment: "Hey there"})
         done()
+      })
+      .error((err) => {
+        console.log(err)
+      })
+    })
+
+    it('returns error in invalid request', (done) => {
+      Get('http://gmail.com', '').then((result) => {
+        expect(result).to.equal({id: 12, comment: "Hey there"})
+        done()
+      })
+      .error((err) => {
+        done()
+        expect(err.response.status).to.be.equal(503)
       })
     })
   })

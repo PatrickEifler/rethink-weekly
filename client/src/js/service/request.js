@@ -31,6 +31,8 @@ export function Post(url, data) {
 
 export function Get(url, query) {
   let request = new XMLHttpRequest()
+
+  console.log("=", url)
   return new Promise(function(resolve, reject) {
     request.onload = function () {
       if (request.status >= 200 && request.status <400) {
