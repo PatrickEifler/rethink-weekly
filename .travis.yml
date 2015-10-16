@@ -4,6 +4,8 @@ node_js:
 services:
   - rethinkdb
 before_script:
+  - go get
   - cd client && npm install &&  npm install -g gulp
   - node -v
-script: cd client && npm test
+script: npm test
+script: cd .. && go build
