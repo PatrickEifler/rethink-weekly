@@ -4,7 +4,7 @@
   "description": "RethinkDB Weekly",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --opts ./test/js/mocha.opts --compilers js:babel/register --recursive test/js/**/*.js"
+    "test": "mocha --opts ./test/js/mocha.opts --compilers js:babel/register --recursive test/js/**/test_*.js"
   },
   "repository": {
     "type": "git",
@@ -48,7 +48,7 @@
     "sinon-chai": "^2.8.0",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
-    "watchify": "^3.4.0",
+    "watchify": "^3.4.0"
   },
   "dependencies": {
     "react-router": "^1.0.0-rc1"

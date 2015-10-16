@@ -1,0 +1,1 @@
+require('./js/service/request')

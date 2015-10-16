@@ -64,14 +64,23 @@ const style = function() {
 gulp.task('style', style)
 
 const bundleTest = function() {
-  browserify("test/js/bundle.js", { debug: true, transforms: ["reactify", {"es6": true}] })
-    .transform(babel)
-    .bundle()
+  const bundler = watchify(browserify("test/bundle.js", { debug: true, transforms: ["reactify", {"es6": true}] })
+                            .transform(babel))
+  function rebundle() {
+    bundler.bundle()
+      .on('error', function(err) { console.error(err); this.emit('end'); })
       .pipe(source("bundle.js"))
       .pipe(buffer())
       .pipe(sourcemaps.init({ loadMaps: true }))
       .pipe(sourcemaps.write('./'))
       .pipe(gulp.dest("test/build"));
+  }
+
+  bundler.on('update', () => {
+    rebundle()
+  })
+
+  rebundle()
 }
 gulp.task('bundleTest', bundleTest)
 

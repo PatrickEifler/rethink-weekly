@@ -1,3 +1,16 @@
+// Follow http://www.kenpowers.net/blog/testing-in-browsers-and-node/
+// Export modules to global scope as necessary (only for testing)
+//if (typeof process !== 'undefined' && process.title === 'node') {
+//  // We are in node. Everything is cover by our test_helper
+//  isBrowser = false;
+//} else {
+//  // We are in the browser. Set up variables like above using served js files.
+//  expect = chai.expect;
+//  // num and sinon already exported globally in the browser.
+//  isBrowser = true;
+//}
+
+// Follow reactjsnews.com/testing-in-react/
 // This is to fix double including of babel
 // rethink-weekly/client/node_modules/babel/node_modules/babel-core/lib/polyfill.js:8
 // will throw new Error("only one instance of babel/polyfill is allowed");

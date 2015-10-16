@@ -9,17 +9,6 @@ import {
 import { Post, Get } from '../../../src/js/service/request'
 
 describe('Request', () => {
-  var FakeXMLHttpRequests = require('fakexmlhttprequest')
-
-  var requests   = []
-  XMLHttpRequest = function() {
-    console.log("here call me")
-    var r =  new FakeXMLHttpRequests()
-    requests.push(r)
-    return r
-  }
-
-
   let server = sinon.fakeServer.create()
   let sandbox
 
@@ -27,40 +16,56 @@ describe('Request', () => {
     console.log("Invoke")
     server = sinon.fakeServer.create()
     console.log(server)
+    var xhr = sinon.useFakeXMLHttpRequest();
   })
 
   after(() => {
     server.restore()
   })
 
+  var xhr
   beforeEach(() => {
     sandbox = sinon.sandbox.create()
     server = sinon.fakeServer.create()
+
+    // Overwrite the global XMLHttpRequest with Sinon fakes
+    xhr = sinon.useFakeXMLHttpRequest();
+    // Create an array to store requests
+    var requests = [];
+    // Keep references to created requests
+    xhr.onCreate = function (xhr) {
+      requests.push(xhr);
+    };
+
   })
 
   afterEach(() => {
     sandbox.restore()
+    xhr.restore()
   })
 
   describe('Get', () => {
 
     console.log(server)
-    server.respondWith("GET", "/foo",
-            [200, { "Content-Type": "application/json" },
-             '[{ "id": 12, "comment": "Hey there" }]']);
 
     it('returns response', (done) => {
-      Get('http://foo', 'foo=bar').then((result) => {
+      Get('/foo', 'foo=bar').then((result) => {
         expect(result).to.equal({id: 12, comment: "Hey there"})
         done()
       })
       .error((err) => {
         console.log(err)
       })
+
+       server.respondWith("GET", "/foo",
+            [200, { "Content-Type": "application/json" },
+             '[{ "id": 12, "comment": "Hey there" }]']);
+
+
     })
 
     it('returns error in invalid request', (done) => {
-      Get('http://gmail.com', '').then((result) => {
+      Get('/foo', '').then((result) => {
         expect(result).to.equal({id: 12, comment: "Hey there"})
         done()
       })
