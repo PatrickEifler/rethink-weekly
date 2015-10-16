@@ -33,7 +33,7 @@ const path = {
   IMAGE_DEST: 'dist/images',
 }
 
-const copyImage = function() {
+const copyImage = () => {
   [path.IMAGE_DEST].map( (imageTo) => {
     gulp.src(path.IMAGE_SRC)
       .pipe(gulp.dest(imageTo))
@@ -110,6 +110,7 @@ gulp.task('watch', function() {
   copy()
   style()
   rebundle()
+  bundleTest()
 })
 
 gulp.task('default', ['watch']);

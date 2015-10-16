@@ -88,15 +88,15 @@ export default React.createClass({
           <Form>
             <InputGroup>
               <InputGroup.Section grow>
-                <FormInput type="text" placeholder="Email address ..." valueLink={this.linkState('email')} />
+                <FormInput name="email" type="text" placeholder="Email address ..." valueLink={this.linkState('email')} />
               </InputGroup.Section>
             </InputGroup>
             <InputGroup>
               <InputGroup.Section grow>
-                <FormInput type="text" placeholder="First name...(Optional)" valueLink={this.linkState('firstname')} />
+                <FormInput name="firstname" type="text" placeholder="First name...(Optional)" valueLink={this.linkState('firstname')} />
               </InputGroup.Section>
               <InputGroup.Section grow>
-                <FormInput type="text" placeholder="Last name...(Optinal)" valueLink={this.linkState('lastname')} />
+                <FormInput name="lastname" type="text" placeholder="Last name...(Optinal)" valueLink={this.linkState('lastname')} />
               </InputGroup.Section>
             </InputGroup>
 
