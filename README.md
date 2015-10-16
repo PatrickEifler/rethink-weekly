@@ -1,4 +1,4 @@
-Rethink-weekly
+Rethink-weekly [![Build Status](https://travis-ci.org/axcoto/rethink-weekly.svg?branch=master)](https://travis-ci.org/axcoto/rethink-weekly)
 ==============
 
 Weekly RetinkDB Mailing List
