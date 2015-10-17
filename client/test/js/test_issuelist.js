@@ -37,7 +37,7 @@ describe('Issuelist component', () => {
 
     footerComponent = TestUtils.renderIntoDocument(<Issuelist />)
     anchors = TestUtils.scryRenderedDOMComponentsWithTag(footerComponent, 'a');
-    menuitems = TestUtils.findRenderedDOMComponentWithTag(footerComponent, 'ul');
+    menuitems = TestUtils.findRenderedDOMComponentWithTag(footerComponent, 'footer');
   })
 
   afterEach(() => {

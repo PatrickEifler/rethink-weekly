@@ -4,7 +4,9 @@ import {
   assert,
   expect,
   TestUtils
-} from '../../test_helper';
+} from '../../test_helper'
+
+import Promise from 'bluebird'
 
 import Spinner from '../../../src/js/spinner'
 import FormSubscribe from '../../../src/js/form/subscribe'
@@ -30,6 +32,23 @@ describe('Subscriber form component', () => {
       }
     }
   }
+
+  before(() => {
+    console.log("before")
+    // sinon.stub(storageStub.prototype)
+    let storageStub = class {
+      subscribe(obj) {
+        return new Promise((resolve, reject) => {
+          resolve(obj)
+        })
+      }
+    }
+    FormSubscribe.__Rewire__('storage', new storageStub())
+  })
+
+  after(() => {
+    FormSubscribe.__ResetDependency__('storage')
+  })
 
   let sandbox, subscribeForm, inputs, button
 
@@ -66,6 +85,9 @@ describe('Subscriber form component', () => {
     TestUtils.Simulate.change(lastnameInput, { target: { value: 'Con' } })
 
     TestUtils.Simulate.click(button)
+    //storageStub.subscribe.called.should.be.equal(true)
+    //storageStub.subscribe.calledWith({f: 1}).to.be(true)
     expect(subscribeForm).to.equal(<Spinner type="warning" message="Loading..." />)
   })
 })
+

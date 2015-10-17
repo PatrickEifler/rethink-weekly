@@ -37,7 +37,7 @@ describe('Footer component', () => {
 
     footerComponent = TestUtils.renderIntoDocument(<Footer />)
     anchors = TestUtils.scryRenderedDOMComponentsWithTag(footerComponent, 'a');
-    menuitems = TestUtils.findRenderedDOMComponentWithTag(footerComponent, 'ul');
+    menuitems = TestUtils.findRenderedDOMComponentWithTag(footerComponent, 'footer');
   })
 
   afterEach(() => {
@@ -45,7 +45,7 @@ describe('Footer component', () => {
   })
 
   it('should generate footer block', () => {
-    expect(anchors.length).to.equal(5)
+    expect(anchors.length).to.equal(4)
     expect(menuitems).to.not.equal(null)
   })
 })
