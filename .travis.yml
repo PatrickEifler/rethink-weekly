@@ -9,5 +9,5 @@ install:
 before_script:
   - cd client && npm install &&  npm install -g gulp
   - node -v
-script: npm test
-script: cd .. && go build
+script:
+  - npm test
