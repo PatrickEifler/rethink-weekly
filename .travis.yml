@@ -3,6 +3,9 @@ node_js:
   - "0.12.7"
 services:
   - rethinkdb
+install:
+  - mkdir $HOME/go
+  - export GOPATH=$HOME/go
 before_script:
   - go get
   - cd client && npm install &&  npm install -g gulp

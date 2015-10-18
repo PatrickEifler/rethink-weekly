@@ -48,15 +48,22 @@ describe('Storage', () => {
     it('send subscriber info to api endpoint', () => {
       let user = {email: 'khicon@axcoto.com'}
       storage.subscribe(user)
-      expect(post.calledWith(user)).to.be.true
+      sinon.assert.calledWith(post, storage.generateUrl("api/subscriptions"), user)
     })
   })
 
-  describe('subscribe', () => {
-    it('send subscriber info to api endpoint', () => {
+  describe('getIssues', () => {
+    it('send correct api request', () => {
       let user = {email: 'khicon@axcoto.com'}
-      storage.subscribe(user)
-      expect(post.calledWith("//foo/api/subscriptions", user)).to.be.true
+      storage.getIssues()
+      sinon.assert.calledWith(get, "//foo/api/issues")
+    })
+  })
+
+  describe('getIssue', () => {
+    it('send correct api request', () => {
+      storage.getIssue(111)
+      sinon.assert.calledWith(get, "//foo/api/issues/111")
     })
   })
 
