@@ -43,26 +43,39 @@ describe('Issuelist component', () => {
   }
   Issuelist.__Rewire__('storage', new storageStub())
   Issuelist.__Rewire__('Link', React.createClass({
-    render: () => { <a {...this.props}> </a> }
+    render: () => { (
+      <a {...this.props}> </a>
+      )
+    }
   }))
 
 
-  beforeEach(() => {
+  before((done) => {
     sandbox = sinon.sandbox.create()
 
     issueListComponent = TestUtils.renderIntoDocument(<Issuelist />)
-    console.log(issueListComponent)
-    headline = TestUtils.scryRenderedDOMComponentsWithTag(issueListComponent, 'h3')
-    items = TestUtils.findRenderedDOMComponentWithTag(issueListComponent, 'a')
+
+    React.render(<Issuelist />, React.findDOMNode(issueListComponent).parentNode);
+    //expect(view.state.someVal).to.be(someNewValue);
+
+      console.log("sasa")
+      console.log(issueListComponent)
+      console.log("======")
+      headline = TestUtils.findRenderedDOMComponentsWithTag(issueListComponent, 'h3')
+      items = TestUtils.scryRenderedDOMComponentWithTag(issueListComponent, 'a')
+      done()
   })
 
-  afterEach(() => {
+  after(() => {
     sandbox.restore()
-    Issuelist.__ResetDependency__('storage')
+    //Issuelist.__ResetDependency__('storage')
   })
 
   it('should generate headline', () => {
-    expect(headline.childrens).to.equal("CHECK OUT WHAT WE SEND BEFORE")
+      console.log(">>>>>>>")
+    console.log(headline)
+      console.log("<<<<<<")
+    expect(headline.props.childrens).to.equal("CHECK OUT WHAT WE SEND BEFORE")
   })
 
   it('should generate list of lins', () => {
