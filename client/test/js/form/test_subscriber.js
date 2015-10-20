@@ -34,7 +34,6 @@ describe('Subscriber form component', () => {
   }
 
   before(() => {
-    console.log("before")
     // sinon.stub(storageStub.prototype)
     let storageStub = class {
       subscribe(obj) {

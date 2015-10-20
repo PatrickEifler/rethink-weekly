@@ -30,22 +30,43 @@ describe('Issuelist component', () => {
     }
   }
 
-  let sandbox, footerComponent, anchors, menuitems
+  let sandbox, issueListComponent, headline, items
+  let storageStub = class {
+    getIssues() {
+      return new Promise((resolve, reject) => {
+        resolve([
+          {id: 1, links: "link1", name: "foo1", date: "d1"},
+          {id: 2, links: "link2", name: "foo2", data: "d2"},
+        ])
+      })
+    }
+  }
+  Issuelist.__Rewire__('storage', new storageStub())
+  Issuelist.__Rewire__('Link', React.createClass({
+    render: () => { <a {...this.props}> </a> }
+  }))
+
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create()
 
-    footerComponent = TestUtils.renderIntoDocument(<Issuelist />)
-    anchors = TestUtils.scryRenderedDOMComponentsWithTag(footerComponent, 'a');
-    menuitems = TestUtils.findRenderedDOMComponentWithTag(footerComponent, 'footer');
+    issueListComponent = TestUtils.renderIntoDocument(<Issuelist />)
+    console.log(issueListComponent)
+    headline = TestUtils.scryRenderedDOMComponentsWithTag(issueListComponent, 'h3')
+    items = TestUtils.findRenderedDOMComponentWithTag(issueListComponent, 'a')
   })
 
   afterEach(() => {
     sandbox.restore()
+    Issuelist.__ResetDependency__('storage')
   })
 
-  it('should generate footer block', () => {
-    expect(anchors.length).to.equal(5)
-    expect(menuitems).to.not.equal(null)
+  it('should generate headline', () => {
+    expect(headline.childrens).to.equal("CHECK OUT WHAT WE SEND BEFORE")
   })
+
+  it('should generate list of lins', () => {
+    expect(items.length).to.equal(2)
+  })
+
 })
