@@ -59,6 +59,7 @@ func main() {
 		Long:  `Send out email for an issue. like: send issue-id-in-rethinkdb`,
 		Run: func(cmd *cobra.Command, args []string) {
 			fmt.Println(args)
+			runNewsLetter()
 		},
 	}
 
