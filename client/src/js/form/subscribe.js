@@ -23,7 +23,7 @@ import {
 } from 'elemental'
 
 import Spinner from '../spinner'
-import Storage from '../service/storage'
+var Storage = require('../service/storage')
 
 const PHASE_SUBSCRIBING = "subscribing"
 const PHASE_INIT = "init"

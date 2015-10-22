@@ -8,7 +8,7 @@ import {
 
 import Storage from './service/storage'
 
-const storage = new Storage()
+let storage = new Storage()
 
 export default React.createClass({
   getInitialState: function() {
@@ -23,6 +23,7 @@ export default React.createClass({
   render: function(){
     return (
       <div>
+      lol
       <h3>CHECK OUT WHAT WE SENT OUT BEFORE</h3>
       {this.state.issues.map(issue => (
         // We need the key attr for react https://fb.me/react-warning-keys

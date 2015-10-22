@@ -4,7 +4,7 @@ var Stats = React.createClass({
   render: function(){
     return (
       <div>
-      {this.props.subscribers} subscribers . {this.props.issues} issues.
+        <span>{this.props.subscribers}</span> subscribers. <span>{this.props.issues}</span> issues.
       </div>
     )
   }

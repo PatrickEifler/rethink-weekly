@@ -29,5 +29,6 @@ export default class Storage {
 
   // Get our stas
   getStats() {
+    return Get(this.generateUrl(`api/stats`))
   }
 }
