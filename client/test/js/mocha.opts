@@ -1,2 +1,3 @@
 --require ./test/js/setup
 --full-trace
+--compilers js:babel/register

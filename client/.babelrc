@@ -1,4 +1,6 @@
 {
-  "plugins":["babel-plugin-rewire"]
+  "plugins": [
+    "babel-plugin-rewire"
+  ]
 }
 
