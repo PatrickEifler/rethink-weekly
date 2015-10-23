@@ -9,28 +9,7 @@ import {
 import Issuelist from '../../src/js/issuelist'
 
 describe('Issuelist component', () => {
- let data = {
-    form: {
-      formAttrs: {
-        email: {
-          label: "Email Address",
-          type: "email",
-          value: "foo@bar.com",
-          validation: "value.match(/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9]+$/i)",
-          errorMessage: "A valid email address is required"
-        },
-        password: {
-          label: "Password",
-          type: "password",
-          value: "foobar",
-          validation: "value.length > 0 && value.length < 73",
-          errorMessage: "Password must be between 1 and 72 characters long"
-        }
-      }
-    }
-  }
-
-  let sandbox, issueListComponent, headline, items
+  let sandbox, issueListComponent, headline, items;
   let storageStub = class {
     getIssues() {
       return new Promise((resolve, reject) => {
@@ -41,44 +20,42 @@ describe('Issuelist component', () => {
       })
     }
   }
-  Issuelist.__Rewire__('storage', new storageStub())
-  Issuelist.__Rewire__('Link', React.createClass({
-    render: () => { (
-      <a {...this.props}> </a>
-      )
-    }
-  }))
-
 
   before((done) => {
     sandbox = sinon.sandbox.create()
+
+    Issuelist.__Rewire__('storage', new storageStub())
+    Issuelist.__Rewire__('Link', React.createClass({
+      render: function() { return (
+        <a {...this.props}>link name</a>
+        )
+      }
+    }))
 
     issueListComponent = TestUtils.renderIntoDocument(<Issuelist />)
 
     React.render(<Issuelist />, React.findDOMNode(issueListComponent).parentNode);
     //expect(view.state.someVal).to.be(someNewValue);
-
-      console.log("sasa")
-      console.log(issueListComponent)
-      console.log("======")
-      headline = TestUtils.findRenderedDOMComponentsWithTag(issueListComponent, 'h3')
-      items = TestUtils.scryRenderedDOMComponentWithTag(issueListComponent, 'a')
+    headline = TestUtils.findRenderedDOMComponentWithTag(issueListComponent, 'h3')
+    issueListComponent.componentWillMount()
+    setTimeout(() => {
+      items = TestUtils.scryRenderedDOMComponentsWithTag(issueListComponent, 'a')
       done()
+    }, 100)
   })
 
   after(() => {
     sandbox.restore()
-    //Issuelist.__ResetDependency__('storage')
+    Issuelist.__ResetDependency__('storage')
+    Issuelist.__ResetDependency__('Link')
   })
 
   it('should generate headline', () => {
-      console.log(">>>>>>>")
-    console.log(headline)
-      console.log("<<<<<<")
-    expect(headline.props.childrens).to.equal("CHECK OUT WHAT WE SEND BEFORE")
+    expect(headline.props.children).to.equal("CHECK OUT WHAT WE SENT OUT BEFORE")
   })
 
-  it('should generate list of lins', () => {
+  it('should generate list of links', () => {
+    expect(issueListComponent.getDOMNode().innerHTML).to.contains("link name")
     expect(items.length).to.equal(2)
   })
 
