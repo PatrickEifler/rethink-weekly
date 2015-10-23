@@ -10,17 +10,17 @@ import Storage from './service/storage'
 
 let storage = new Storage()
 
-export default class IssuelistCompoentn extends React.Component{
-  getInitialState () {
+export default React.createClass({
+  getInitialState: function() {
     return {issues: []}
-  }
+  },
 
-  componentWillMount () {
+  componentWillMount: function() {
     storage.getIssues()
       .then((issues) => { this.setState({issues: issues})})
-  }
+  },
 
-  render (){
+  render: function(){
     return (
       <div>
       lol
@@ -37,4 +37,4 @@ export default class IssuelistCompoentn extends React.Component{
       </div>
     )
   }
-}
+})
