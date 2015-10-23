@@ -7,9 +7,9 @@ import (
 	"io"
 	"os"
 
-	r "github.com/dancannon/gorethink"
-	"github.com/getsentry/raven-go"
-	"github.com/spf13/cobra"
+	r "github.com/axcoto/rethink-weekly/Godeps/_workspace/src/github.com/dancannon/gorethink"
+	"github.com/axcoto/rethink-weekly/Godeps/_workspace/src/github.com/getsentry/raven-go"
+	"github.com/axcoto/rethink-weekly/Godeps/_workspace/src/github.com/spf13/cobra"
 )
 
 var (

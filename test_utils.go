@@ -1,7 +1,7 @@
 package main
 
 import (
-	r "github.com/dancannon/gorethink"
+	r "github.com/axcoto/rethink-weekly/Godeps/_workspace/src/github.com/dancannon/gorethink"
 	"log"
 	"os"
 )
