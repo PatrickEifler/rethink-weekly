@@ -8,14 +8,15 @@ import (
 	"net/http"
 	"os"
 
-	r "github.com/dancannon/gorethink"
-	"github.com/getsentry/raven-go"
-	"github.com/gorilla/mux"
-	"github.com/thoas/stats"
-	"github.com/unrolled/render" // or "gopkg.in/unrolled/render.v1"
+	r "github.com/axcoto/rethink-weekly/Godeps/_workspace/src/github.com/dancannon/gorethink"
+	"github.com/axcoto/rethink-weekly/Godeps/_workspace/src/github.com/getsentry/raven-go"
+	"github.com/axcoto/rethink-weekly/Godeps/_workspace/src/github.com/gorilla/mux"
+	"github.com/axcoto/rethink-weekly/Godeps/_workspace/src/github.com/thoas/stats"
+	"github.com/axcoto/rethink-weekly/Godeps/_workspace/src/github.com/unrolled/render"
 )
 
-type App struct {
+type App struct // or "gopkg.in/unrolled/render.v1"
+{
 	R *render.Render
 }
 

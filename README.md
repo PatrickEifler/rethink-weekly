@@ -1,4 +1,12 @@
-Rethink-weekly [![Build Status](https://travis-ci.org/axcoto/rethink-weekly.svg?branch=master)](https://travis-ci.org/axcoto/rethink-weekly)
+Rethink-weekly 
+
+Client: [![Build Status](https://travis-ci.org/axcoto/rethink-weekly.svg?branch=master)](https://travis-ci.org/axcoto/rethink-weekly)
+
+Server: [![wercker
+status](https://app.wercker.com/status/6e538395df2cb502391d87ab4146c31f/m
+"wercker
+status")](https://app.wercker.com/project/bykey/6e538395df2cb502391d87ab4146c31f)
+
 ==============
 
 Weekly RetinkDB Mailing List

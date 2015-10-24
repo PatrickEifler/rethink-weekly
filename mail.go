@@ -5,8 +5,8 @@ import (
 	//"log"
 	"os"
 
-	"github.com/getsentry/raven-go"
-	"github.com/mailgun/mailgun-go"
+	"github.com/axcoto/rethink-weekly/Godeps/_workspace/src/github.com/getsentry/raven-go"
+	"github.com/axcoto/rethink-weekly/Godeps/_workspace/src/github.com/mailgun/mailgun-go"
 )
 
 type notifier interface {

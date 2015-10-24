@@ -10,6 +10,7 @@ type newsletter struct{}
 
 // Send out newsletter
 func (n *newsletter) send() {
+	// Create a
 }
 
 // Finding outstandng issues and ask us chooese one to send out
