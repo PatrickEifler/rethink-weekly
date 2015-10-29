@@ -1,0 +1,18 @@
+{
+  "framework": "mocha",
+  "src_files": [
+    "node_modules/chai/chai.js",
+    "lib/*",
+    "test/js/setup",
+    "test/*.test.js"
+  ],
+  "launchers": {
+    "node": {
+      "command": "./node_modules/.bin/mocha --opts ./test/js/mocha.opts -R tap test/js/**/*.js",
+      "protocol": "tap"
+    }
+  },
+  "launch_in_dev": [
+    "node"
+  ]
+}
