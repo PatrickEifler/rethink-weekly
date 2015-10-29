@@ -27,3 +27,5 @@ build: linux mac
 notify:
 	/usr/bin/osascript -e "display notification \"build done\""
 
+clean:
+	rm -rf rewl.* rethink-weekly
