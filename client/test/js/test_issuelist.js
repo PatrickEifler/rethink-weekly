@@ -59,4 +59,8 @@ describe('Issuelist component', () => {
     expect(items.length).to.equal(2)
   })
 
+  describe('click on issue link', () => {
+    it('should load issue', () => {
+    })
+  })
 })
